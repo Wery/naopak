@@ -903,13 +903,13 @@ list_img($prod_id);
 				var ids = [];
 				//var img_counter = $(".obraz_produktu").length;
 				//console.log("IMG COUNT: "+img_counter);
-				$(".obraz_produktu").each(function(){
+				/*$(".obraz_produktu").each(function(){
 						ids.push($(this).attr("id"));
 					});
 					
 				console.log(ids.join('\n'));	
 				$.ajax({
-					url: "<? echo get_bloginfo('template_url'); ?>/test_js_array.php",
+					url: "<? //echo get_bloginfo('template_url'); ?>/test_js_array.php",
 					type: "POST",	
 					data: {
 							img_array: ids,
@@ -920,19 +920,11 @@ list_img($prod_id);
 	                { 	
 						console.log(data);
 					}
-				});
-				
+				});*/
+				jQuery('#file_upload').uploadify('disable', true);
 			});
 			
-		/*		
-		jQuery('#_crop_bttn').hover(function(){
-			jQuery(this).css('background-color', '#F99D31');
-			jQuery(this).css('color', '#333');
-		},function(){
-			jQuery(this).css('background-color', '#CCC');
-			jQuery(this).css('color', '#FFF');
-		});
-		*/
+
 			$("#kategoria").val('<? echo $kategoria; ?>');
 			<? echo $tagi; ?>
 			$("#add_product_form").submit(function() {
@@ -1258,16 +1250,14 @@ $("#btn_dodaj_produkt").live('click', function () {
 				var img_id;
 				
 
+		 
 $("#file_upload").live('click', function () {
 	
 		
-		jQuery('#file_upload').uploadify('disable', true);
+	      $('#file_upload').uploadify('disable', true);
 	
 	      var img_nr = parseInt($('.obraz_produktu').size());
 		  console.log('Jest juz ' + img_nr + 'obrazkow !');
-		  
-		 //if(img_nr == 6) 	  
-		 // jQuery('#file_upload').uploadify('disable', true);
 		  
 		 if(img_nr > 6)
 		 {
@@ -1284,22 +1274,27 @@ $("#file_upload").live('click', function () {
 
 				 $("#file_upload").uploadify({
 					"swf"       	   : "<? echo get_bloginfo('template_url'); ?>/js/uploadify2/uploadify.swf",
-					"uploader"         : "<? echo get_bloginfo('template_url'); ?>/upload.php",	
-					"disable"          : false,			
+					"uploader"         : "<? echo get_bloginfo('template_url'); ?>/upload.php",							
 					"height"		   : 25,
 					"width"			   : 135,
 					"buttonText"	   : "Dodaj zdjęcie",
 					"fileTypeDesc" 	   : "Image Files",
-					"fileTypeExts"     : "*.jpg; *.jpeg; *.png",
+					"fileTypeExts"     : "*.jpg; *.jpeg;",
 					"preventCaching"   : true,								
 					"fileSizeLimit"    : "1MB",
 					"method"           : "POST",
-					"formData"         : { "file_nr" : img_nr, "prod_id" : prod_id },					
+					"formData"         : { "file_nr" : img_nr, "prod_id" : prod_id },		
+					'onSWFReady'	   : function(){
+						if(img_nr > 6)
+						{
+							$('#file_upload').uploadify('disable', true);
+						}
+					},
 					'onDialogOpen'     : function() {
 					//	alert('adjhasqkjdhkajshdjashdj');
 					},
 					"onCancel" : function(file) {
-						jQuery('#file_upload').uploadify('disable', false);
+						//$('#file_upload').uploadify('disable', false);
 					},
 					"onDialogClose"  : function(queueData) {
 						if(queueData.filesQueued==0)
@@ -1423,7 +1418,7 @@ $("#file_upload").live('click', function () {
 												var img_nr = $('.obraz_produktu').size();
 												console.log("nr img: "+img_nr);
 												if(img_nr < 7) 	  
-													jQuery('#file_upload').uploadify('disable', false);
+													$('#file_upload').uploadify('disable', false);
 													
 												$( "#modal_dialog:ui-dialog" ).dialog( "destroy" );																																	
 											}
@@ -1469,7 +1464,7 @@ $("#file_upload").live('click', function () {
 			  
 	  				var img_nr = $('.obraz_produktu').size();
 					if(img_nr < 7) 	  
-						jQuery('#file_upload').uploadify('disable', false);
+						$('#file_upload').uploadify('disable', false);
 						
 					$( "#modal_dialog:ui-dialog" ).dialog( "destroy" );
 			  },
@@ -1568,7 +1563,7 @@ $("#file_upload").live('click', function () {
 				
 				var img_nr = $('.obraz_produktu').size();
 				if(img_nr < 7) 	  
-		 			jQuery('#file_upload').uploadify('disable', false);
+		 			$('#file_upload').uploadify('disable', false);
 		  
               },
 			  error: function(xhr, thrownError)
@@ -1579,7 +1574,14 @@ $("#file_upload").live('click', function () {
 			  }
          });
 			console.log('croping');
+			
 		});
+			  /*
+		 if(parseInt($('.obraz_produktu').size()) > 6)
+		 {
+			 jQuery('#file_upload').uploadify('disable', true);
+		 }
+			*/  
 	 });   
 			
 			

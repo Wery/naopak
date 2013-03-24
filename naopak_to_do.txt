@@ -40,8 +40,8 @@ PRODUCT DISPLAY:
 - cena wysylki
 
 LISTA (obie wersje):
-- stronicowanie z wpisywaniem strony
-- kodowanie znakow z bazy danych
++ stronicowanie z wpisywaniem strony
++ kodowanie znakow z bazy danych
 
 LISTA (nie galeria):
 + ograniczyc opis
@@ -57,10 +57,10 @@ KOSZYK:
 DODAJ PRODUKT:
 - co jak nie doda sie produktu, a doda sie zdjecia ?
 - css naglowek
-- ostre krawedzie
++ ostre krawedzie
 - bez pomaranczu tytlko tytul
-- mini w odstepie jak krawedz
-- dodac wage produktu
++ mini w odstepie jak krawedz
++ dodac wage produktu
 - wypisywanie uzytego ostatnio filtru
 - dodaj zdjecie -> dodja kolejne zdj
 - pole opis, na szerokosc jak oryginalnie, zeby widac jak wyglada tekst
@@ -69,6 +69,8 @@ DODAJ PRODUKT:
 EDYTUJ PRODUKT:
 - css naglowek
 + dodajac zdjecia, proporcjonalnie robic min wielkosc cropa
+- jak jest max kpl. zdjec, to wylaczac przycisk dodawania
+- usowac zdjecia dodane i zaraz usuniete
 
 SZCZEGOLY PRODUCENTA:
 + dostosowac do wygladu konta
@@ -79,5 +81,3 @@ HISTORIA ZAMOWIEN:
 SZCZEGOLY ZAMOWIENIA:
 - dane kontaktowe osoby zamawiajacej
 - rozdzielenie zamowienia na osobnych sprzedajacych
-
-PW ALL TO DO

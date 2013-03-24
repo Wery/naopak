@@ -49,5 +49,6 @@
     <div class="accordionButtonLink"><a href="http://naopak.com.pl/dodaj-tagi" >Dodaj tagi produktów</a></div>
     <div class="accordionButtonLink"><a href="http://naopak.com.pl/user-display" >Przeglądaj użytkowników</a></div>
     <div class="accordionButtonLink"><a href="http://naopak.com.pl/producent-display" >Przegldąj producentów</a></div>        
+    <div class="accordionButtonLink"><a href="http://naopak.com.pl/ustawienia" >ustawienia</a></div>   
 </div>
 </div>

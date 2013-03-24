@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 /**
  * @package asd
  *
  * @author: Wery
  * @url: http://www.customweb.com
 
- Template Name: User Account Template
+ Template Name: User settings
  
  */	
 ?>
@@ -28,10 +28,6 @@ function add_scripts()
 	</script>
 	';
 	*/
-	
-		echo '<link rel="stylesheet" type="text/css" href="'.get_bloginfo('template_url').'/css/table_style.css"/>';
-
-	echo '<script type="text/javascript" src="'.get_bloginfo('template_url').'/js/jquery.tablesorter.js"></script>';
 }
 add_action('wp_head', 'add_scripts');
 
@@ -97,13 +93,6 @@ get_header();
 	jQuery('.submenu_active').parent().prev('.accordionButton').addClass('on');
 	
 	jQuery('.cat_selected').show();
-	
-	 // extend the default setting to always include the zebra widget. 
-    jQuery.tablesorter.defaults.widgets = ['zebra']; 
-    // extend the default setting to always sort on the first column 
-    jQuery.tablesorter.defaults.sortList = [[0,0]]; 
-    // call the tablesorter plugin 
-    jQuery("table").tablesorter(); 
 	
 	});
 	
@@ -262,9 +251,7 @@ div.accordionContentMenu a.submenu_active{
 		
 </style>
 
-<link rel="stylesheet" href="<?php echo get_bloginfo('template_url') ?>/pm/tabela.css" type="text/css" />
-<link rel="stylesheet" href="<?php echo get_bloginfo('template_url') ?>/pm/general.css"type="text/css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo get_bloginfo('template_url') ?>/css/table_style.css"/>
+
 
 
 <div class="hfeed content">
@@ -293,7 +280,7 @@ if ( is_user_logged_in() ) {
 <? include "menu.php"; ?>
 <div id="right_content_page" >
 <?
-$wpdb = new wpdb('root', '', 'bollo_naopak', 'localhost');
+
 echo 
 /*<table id="myTable" class="tablesorter">*/
 '
@@ -310,7 +297,7 @@ echo
 <tbody>';
 
 
-
+	$wpdb = new wpdb('root', '', 'bollo_naopak', 'localhost');
 	$sql_tagi = $wpdb->get_results("SHOW COLUMNS FROM `s_tag`", ARRAY_N);
 	$number = $wpdb->num_rows;
 
@@ -429,7 +416,7 @@ $pic='';
 		}
 
 		$lista .= "<td>$id_prod</td>
-		<td class=\"tab_nazwa\"><a href=\"item?prod_id=".$id_prod."\">$nazwa</a></td>
+		<td class=\"tab_nazwa\">$nazwa</td>
 		<td>$cena</td>
 		<td>$kategoria</td>
 		<td><a href=\"http://naopak.com.pl/edycja-produktu?prod_id=".$id_prod."\">szczegóły</a></td>";

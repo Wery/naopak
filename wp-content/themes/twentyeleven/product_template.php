@@ -149,12 +149,14 @@ div.content #opis{
 	float:left;
 	bottom:0px;
 	width:460px;		
+	bottom: 0px;
+	position: absolute;
 }
 
 #opis_produktu{
 	float:left;
 	margin-left:50px;
-	height:397px;
+	min-height:300px;
 	position:relative;
 	width:519px;
 }

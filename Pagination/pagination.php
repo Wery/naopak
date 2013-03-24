@@ -16,12 +16,16 @@
                     $('#loading').fadeOut('fast');
                 }                
                 function loadData(page){
-                    loading_show();                    
+                    loading_show();  
+                    var formData = $("page="+page).serialize();                  
                     $.ajax
                     ({
                         type: "POST",
                         url: "load_data.php",
-                        data: "page="+page,
+                        data: 
+                        {
+						  form: formData
+					    },
                         success: function(msg)
                         {
                             $("#container").ajaxComplete(function(event, request, settings)

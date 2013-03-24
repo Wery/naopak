@@ -102,6 +102,7 @@
 		
 	$sql = "UPDATE s_zdjecia SET ";
 	$max=count($img_array);
+	// uwzglednic warunekt na reszte zdjec...
 	for($i=1;$i<=$max;$i++)
     { 
 		if($i==$max)
@@ -112,13 +113,13 @@
 
 	$sql .= " WHERE id_produkt = '".$prod_id."'";
 	
-//	echo "\nFOTO QUERY:\n".$sql;
+	echo "\nFOTO QUERY:\n".$sql;
 	
 	mysql_query($sql);	
 	
 	mysql_close($connection); 
 
-	//echo "\n\nTAG QUERY:\n".$sql_update_tag_query."\n\nPROD QUERY:\n".$sql_update_product_query;
+	echo "\n\nTAG QUERY:\n".$sql_update_tag_query."\n\nPROD QUERY:\n".$sql_update_product_query;
 	
 
 ?>

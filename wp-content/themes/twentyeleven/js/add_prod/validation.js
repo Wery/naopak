@@ -5,19 +5,29 @@ $(document).ready(function(){
 	var nazwa = $("#nazwa_produktu");
 	var cena = $("#cena");
 	var opis = $("#opis");
+	var wysokosc = $("#wysokosc");
+	var szerokosc = $("#szerokosc");
+	var glebokosc = $("#glebokosc");
+	var waga = $("#waga");
 		
 	var nazwaInfo = $("#nazwa_produktuInfo");
 	var cenaInfo = $("#cenaInfo");
 	var opisInfo = $("#opisInfo");
+	var wymiarInfo = $("#wymiarInfo");
+	var wagaInfo = $("#wagaInfo");
 	
 	//On blur
 	nazwa.blur(validateNazwa);
 	cena.blur(validateCena);
 	opis.blur(validateOpis);
-
+	wysokosc.blur(validateWymiar);
+	szerokosc.blur(validateWymiar);
+	glebokosc.blur(validateWymiar);
+	waga.blur(validateWaga);
+	
 	//On Submitting
 	form.submit(function(){
-		if(validateNazwa() && validateCena() && validateOpis())
+		if(validateNazwa() && validateCena() && validateOpis() && validateWymiar() && validateWaga())
 			return true
 		else
 			return false;
@@ -77,6 +87,52 @@ $(document).ready(function(){
 			opisInfo.text("");
 			opisInfo.removeClass("error");
 			return true;
+		}
+	}
+	function validateWymiar(){
+		//testing regular expression
+		var a = $("#szerokosc").val();
+		var b = $("#wysokosc").val();
+		var c = $("#glebokosc").val();
+		var filter = /^[0-9]{1,}?$/;
+		//if it's valid email
+		if(filter.test(a)&&filter.test(b)&&filter.test(c)){
+			wysokosc.removeClass("error");
+			glebokosc.removeClass("error");
+			szerokosc.removeClass("error");
+			wymiarInfo.text("");
+			wymiarInfo.removeClass("error");
+				
+			return true;
+		}
+		//if it's NOT valid
+		else{
+			wysokosc.addClass("error");
+			glebokosc.addClass("error");
+			szerokosc.addClass("error");
+			wymiarInfo.text("Proszę o poprawne wpisanie wymiaru produktu.");
+			wymiarInfo.addClass("error");
+			return false;
+		}
+	}
+	function validateWaga(){
+		//testing regular expression
+		var a = $("#waga").val();
+		var filter = /^[0-9]{1,}([,\.]{1}[0-9]{1})?$/;
+		//if it's valid email
+		if(filter.test(a)){
+			waga.removeClass("error");
+			wagaInfo.text("");
+			wagaInfo.removeClass("error");
+			
+			return true;
+		}
+		//if it's NOT valid
+		else{
+			waga.addClass("error");
+			wagaInfo.text("Proszę o poprawne wpisanie wagi produktu.");
+			wagaInfo.addClass("error");
+			return false;
 		}
 	}
 });

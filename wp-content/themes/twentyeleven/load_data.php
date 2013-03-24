@@ -1,25 +1,52 @@
 <?php
-parse_str($_POST['page'], $params);
+session_start();
+parse_str($_POST['form'], $params);
 //$img_array = $_POST['img_array'];
-
-if(isset($_POST['show']))
+function trim_text($input, $length, $ellipses = true, $strip_html = true) {
+    //strip tags, if desired
+    if ($strip_html) {
+        $input = strip_tags($input);
+    }
+  
+    //no need to trim, already shorter than trim length
+    if (strlen($input) <= $length) {
+        return $input;
+    }
+  
+    //find last space within length
+    $last_space = strrpos(substr($input, 0, $length), ' ');
+    $trimmed_text = substr($input, 0, $last_space);
+  
+    //add ellipses (...)
+    if ($ellipses) {
+        $trimmed_text .= '...';
+    }
+  
+    return $trimmed_text;
+}
+$show=0;
+if(isset($params['show']))
 {
-	$show = $_POST['show'];
+	$show = $params['show'];
 	$_SESSION["show_method"] = $show;
+	//echo "\nShow mode is set to: ".$show; 
 }
 else
 {
+	//echo "\nShow mode is not set to: ".$show."\n"; 
 	if(isset($_SESSION["show_method"]))
 	{
 		$show = $_SESSION["show_method"];
+		//echo "\nShow mode session is set, change to: ".$show; 
 	}
 }
 
+	
 	$where_array = Array();
 	$array_index=0;
 	$tmp_value='';
 
-  	$kolor = $_POST['kolor'];
+  	$kolor = $params['kolor'];
 	if(isset($kolor))
 	{
 		if($kolor != "-1")
@@ -29,33 +56,33 @@ else
 		}
 	}
 		
-	if(isset($_POST['subcat']))
+	if(isset($params['subcat']))
 	{
-		$subcat_id = $_POST['subcat'];
+		$subcat_id = $params['subcat'];
 		$tmp_value = ' t_subcategory.subID = '.$subcat_id.' ';
 		array_push($where_array, $tmp_value);
 	}
 
 	
 	
-	if (isset($_POST['cat']))
+	if (isset($params['cat'])&&$params['cat']!=="all")
 	{ 
-		$cat_id = $_POST['cat'];
+		$cat_id = $params['cat'];
 		$tmp_value = ' t_subcategory.catID = '.$cat_id.' ';
 		array_push($where_array, $tmp_value);
 	} 
 	
-	$tag_typ =$_POST['typ_tagu'];
-	if (isset($tag_typ))
+	//$tag_typ =$params['typ_tagu'];
+	if (isset($params['typ_tagu']))
 	{ 
-		$tag_name = $_POST['nazwa_tagu'];
+		$tag_name = $params['nazwa_tagu'];
 		
-		$tmp_value = ' s_'.$tag_typ.'.nazwa = \''.$tag_name.'\'';
+		$tmp_value = ' s_'.$params['typ_tagu'].'.nazwa = \''.$tag_name.'\'';
 		array_push($where_array, $tmp_value);
 	} 
 	
-	$cena_min = $_POST['cena_min'];
-	$cena_max = $_POST['cena_max'];
+	$cena_min = $params['cena_min'];
+	$cena_max = $params['cena_max'];
 	if (isset($cena_min) || isset($cena_max))
 	{ 
 		if($cena_min != "")
@@ -70,7 +97,7 @@ else
 		}
 	} 
 	
-	$material = $_POST['material'];
+	$material = $params['material'];
 	if(isset($material))
 	{
 		if($material != "-1")
@@ -80,7 +107,8 @@ else
 		}
 	}
       
-if($params['page'])
+	 // echo "page = ".$params['page'];
+if(isset($params['page'])&&$params['page'])
 {
     
 $dni = 21;
@@ -185,9 +213,10 @@ $first_btn = true;
 $last_btn = true;
 $start = $page * $per_page;
 
-
+$count_sql = $query_lista_g;
 $query_lista_g.=" LIMIT $start, $per_page";
-	echo $query_lista_g;
+
+	//echo $query_lista_g;
 $query_pag_data = $query_lista_g;//"SELECT msg_id,message from messages LIMIT $start, $per_page";
 
 //$msg = $query_pag_data;
@@ -251,13 +280,11 @@ if($show == 0){
 		$sql_result = mysql_fetch_row($id_sql);
 
 		$pic = "img/products/$id_prod/$sql_result[2]_l.jpg";
-		//echo "<br />$pic<br />";
 		
-	  	if (!file_exists($pic)) 
+	  	if (!file_exists($_SERVER['DOCUMENT_ROOT']."/".$pic)) 
 		{ 	 
 			$pic = "img/no_pic.png"; 
 		}
-
 	$pozostalo = (strtotime($data) - strtotime($data_dodania)) / (60*60*24);
 	if($pozostalo < $dni)
 	{
@@ -288,7 +315,7 @@ if($show == 0){
 
 	$galeria .= "</table>";
 //	echo $galeria;
-    $msg .= $$prod_list;
+    $msg .= $galeria;
 }
 else if($show == 1)	
 {
@@ -321,7 +348,7 @@ else if($show == 1)
 	}
 	
 	//foreach ( $sql_results as $row )
-	while($row = mysql_fetch_array($result))		
+	while($row = mysql_fetch_array($result_pag_data))		
 	{ 	
 	
 	  $id_prod=$row[0];
@@ -354,7 +381,7 @@ else if($show == 1)
 		$pic = "img/products/$id_prod/$sql_result[2]_l.jpg";
 	
 	  	
-		if (!file_exists($pic)) 
+		if (!file_exists($_SERVER['DOCUMENT_ROOT']."/".$pic)) 
 		{ 	 
 			$pic = "img/no_pic.png"; 
 		}
@@ -362,7 +389,7 @@ else if($show == 1)
 		$pozostalo = (strtotime($data) - strtotime($data_dodania)) / (60*60*24);
 		if($pozostalo < $dni)
 		{
-			$img_tag = "<img src=\"http://naopak.com.pl/img/nowe.png\" alt=\"image\" style=\"display: block; background-image: url(http://naopak.com.pl/$pic); opacity:1;\" />";
+			$img_tag = "<img src=\"img/nowe.png\" alt=\"image\" style=\"display: block; background-image: url(http://naopak.com.pl/$pic); opacity:1;\" />";
 		}
 		else
 		{
@@ -418,9 +445,8 @@ else if($show == 1)
 
 	$prod_list .= "</table>";
 	//echo $prod_list;
-    $msg .= $$prod_list;
+    $msg .= $prod_list;
 }
-
 
 //****************************************
 
@@ -433,10 +459,10 @@ $msg = "<div class='data'><ul>" . $msg . "</ul></div>"; // Content for Data
 */
 
 /* --------------------------------------------- */
-$query_pag_num = "SELECT COUNT(*) AS count FROM s_produkt";
-$result_pag_num = mysql_query($query_pag_num);
-$row = mysql_fetch_array($result_pag_num);
-$count = $row['count'];
+//$query_pag_num = "SELECT COUNT(*) AS count FROM s_produkt";
+$result_pag_num = mysql_query($count_sql);
+//$row = mysql_fetch_array($result_pag_num);
+$count = mysql_num_rows($result_pag_num);//$row['count'];
 $no_of_paginations = ceil($count / $per_page);
 
 /* ---------------Calculating the starting and endign values for the loop----------------------------------- */
@@ -462,17 +488,17 @@ $msg .= "<div class='pagination'><ul>";
 
 // FOR ENABLING THE FIRST BUTTON
 if ($first_btn && $cur_page > 1) {
-    $msg .= "<li p='1' class='active'>First</li>";
+    $msg .= "<li p='1' class='active'>|<</li>";
 } else if ($first_btn) {
-    $msg .= "<li p='1' class='inactive'>First</li>";
+    $msg .= "<li p='1' class='inactive'>|<</li>";
 }
 
 // FOR ENABLING THE PREVIOUS BUTTON
 if ($previous_btn && $cur_page > 1) {
     $pre = $cur_page - 1;
-    $msg .= "<li p='$pre' class='active'>Previous</li>";
+    $msg .= "<li p='$pre' class='active'><</li>";
 } else if ($previous_btn) {
-    $msg .= "<li class='inactive'>Previous</li>";
+    $msg .= "<li class='inactive'><</li>";
 }
 for ($i = $start_loop; $i <= $end_loop; $i++) {
 
@@ -485,19 +511,19 @@ for ($i = $start_loop; $i <= $end_loop; $i++) {
 // TO ENABLE THE NEXT BUTTON
 if ($next_btn && $cur_page < $no_of_paginations) {
     $nex = $cur_page + 1;
-    $msg .= "<li p='$nex' class='active'>Next</li>";
+    $msg .= "<li p='$nex' class='active'>></li>";
 } else if ($next_btn) {
-    $msg .= "<li class='inactive'>Next</li>";
+    $msg .= "<li class='inactive'>></li>";
 }
 
 // TO ENABLE THE END BUTTON
 if ($last_btn && $cur_page < $no_of_paginations) {
-    $msg .= "<li p='$no_of_paginations' class='active'>Last</li>";
+    $msg .= "<li p='$no_of_paginations' class='active'>>|</li>";
 } else if ($last_btn) {
-    $msg .= "<li p='$no_of_paginations' class='inactive'>Last</li>";
+    $msg .= "<li p='$no_of_paginations' class='inactive'>>|</li>";
 }
-$goto = "<input type='text' class='goto' size='1' style='margin-top:-1px;margin-left:60px;'/><input type='button' id='go_btn' class='go_button' value='Go'/>";
-$total_string = "<span class='total' a='$no_of_paginations'>Page <b>" . $cur_page . "</b> of <b>$no_of_paginations</b></span>";
+$goto = "<input type='button' id='go_btn' class='go_button' value='Go'/><input type='text' class='goto' size='1' style='margin-top:-1px;margin-left:60px;float:right;'/>";
+$total_string = "<span class='total' a='$no_of_paginations'>Strona <b>" . $cur_page . "</b> z <b>$no_of_paginations</b></span>";
 $msg = $msg . "</ul>" . $goto . $total_string . "</div>";  // Content for pagination
 echo $msg;
 }
