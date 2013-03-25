@@ -501,6 +501,7 @@ div.accordionContentMenu a.submenu_active{
 	width: 55px;
 	opacity:0.75;
 }	
+
 </style>
 
 
@@ -1492,14 +1493,14 @@ $("#file_upload").live('click', function () {
 			var tempfile = $("#tempfile").val();
 			var step = $("#step").val();
 			
-			/*
+			
 			$("#loading")
 			.ajaxStart(function(){
 				$(this).show();
          	})
          	.ajaxComplete(function(){
            	    $(this).hide();			
-         	});*/
+         	});
 			
 			
 			 console.log('img id in croping: '+img_id);
@@ -1537,16 +1538,10 @@ $("#file_upload").live('click', function () {
  				 // console.log('ajax: step: '+data.step);
 				 // console.log("ajax: prod id: "+data.prod_id);
  				 // console.log("ajax: pic id: "+data.pic_id);
-				  
-			  	  /*$('ul#img_list').append("<li alt=\""+img_nr+"\"><table class=\"li_img\"><tr><td><img src=\"http://naopak.com.pl/img/products/"+prod_id+"/"+img_id+'_t.jpg'+"\" /></td><td><input type=\"button\" class=\"btn_up\" value=\"up\" id=\""+img_nr+"\" xxx=\""+img_id+"\" /><br><input type=\"button\" class=\"btn_delete\" value=\"delete\" id=\""+img_nr+"\" xxx=\""+img_id+"\" /><br><input type=\"button\" class=\"btn_down\" value=\"down\" id=\""+img_nr+"\" xxx=\""+img_id+"\" /></td></tr></table></li>");*/			
-			  
-			   $('#img_list2').append('<div class="obraz_produktu" id="'+img_id+'" style="display:inline;" nr="'+img_nr+'" ><span class="arrows"></span><img style="margin-left: -4px;" src="http://naopak.com.pl/img/products/'+prod_id+'/'+img_id+'_t.jpg" style="" ></div>');
-			  /*
-			  <div class="obraz_produktu" id="507d62b3c4d3" style="display:inline;">
-      <span class="arrows"></span>
-        <img src="http://naopak.com.pl/img/products/507d61b62d285/507d62b3c4d3e_t.jpg" style="" >
-    </div>
-			  */
+
+			  //style="margin-left: -4px;"
+			   $('#img_list2').append('<div class="obraz_produktu" id="'+img_id+'" style="display:inline;" nr="'+img_nr+'" ><span class="arrows"></span><img  src="http://naopak.com.pl/img/products/'+prod_id+'/'+img_id+'_t.jpg" style="" ></div>');
+
 //				sortuj($("#img_list"));
 
 				console.log("ajax sukces !");
@@ -1576,12 +1571,6 @@ $("#file_upload").live('click', function () {
 			console.log('croping');
 			
 		});
-			  /*
-		 if(parseInt($('.obraz_produktu').size()) > 6)
-		 {
-			 jQuery('#file_upload').uploadify('disable', true);
-		 }
-			*/  
 	 });   
 			
 			

@@ -15,8 +15,21 @@
 
 	//include("koszyk_functions.php");
 	
-
-	
+	$material = $_GET['material'];
+	$kolor = $_GET['kolor'];
+	$cena_min = $_GET['cena_min'];
+	$cena_max = $_GET['cena_max'];
+	$cat = $_GET['cat'];
+	$subcat = $_GET['subcat'];
+		
+		/*echo "<br /><br />
+		kolor = $kolor	<br />
+		material = $material <br />
+		cena_min = $cena_min <br />
+		cena_max = $cena_max <br />
+		cat = $cat <br />
+		subcat = $subcat
+		<br /><br /><br />";*/
 	
 function add_scripts()
 {
@@ -156,7 +169,7 @@ div.content #opis{
 #opis_produktu{
 	float:left;
 	margin-left:50px;
-	min-height:300px;
+	min-height:469;
 	position:relative;
 	width:519px;
 }
@@ -339,12 +352,18 @@ div.content .filtruj_btn a , div.content .powrot_btn a{
 </form>
 <div class="hfeed content">
 
+<?
+//$adres = get_permalink()."?" .http_build_query($_GET);
+$regex = '#(^prod_id=){1}.*?(&){1}#i';
+$query = preg_replace($regex, '', http_build_query($_GET));
+echo $query;
+?>
 <div id="mapa_listowanie">
 	<div class="mapa">jesteś tutaj: <?php echo $_SERVER['REQUEST_URI']; ?></div>
 
     <div class="galeria_lista">    
 	  <span class="powrot_btn">
-				<a id="powrot" href="#" >< pworót</a>
+				<a id="powrot" href="http://naopak.com.pl/lista2?<? echo $query; ?>" >< pworót</a>
    		 </span>
 	</div>
     	<div class="filtr_listy">
@@ -387,7 +406,37 @@ div.content .filtruj_btn a , div.content .powrot_btn a{
   <span class="filtr_nazwa">kolor:</span>
   <select name="kolor" id="kolor">
 	  <option value="-1">wybierz</option>
-	<? echo $kolory_filtr; ?>
+	<? 
+	$connection = @mysql_connect('localhost', 'root', '') or die("Connection error !");
+	$db = @mysql_select_db('bollo_naopak', $connection);
+	
+	mysql_set_charset('utf8',$connection); 
+	mysql_query('SET character_set_connection=utf8');
+	mysql_query('SET character_set_client=utf8');
+	mysql_query('SET character_set_results=utf8');
+	mysql_query('set names utf8;');
+	
+		$query_kolor="SELECT nazwa FROM s_kolor";
+	//$sql_tagi = $wpdb->get_results($query_kolor, ARRAY_N);
+ 	$sql_kolor = mysql_query($query_kolor);
+ 
+	//foreach ( $sql_tagi as $s )
+	while($s = mysql_fetch_array($sql_kolor))
+	{
+		if($kolor === $s[0])
+		{
+			$kolory_filtr .= "<option selected=\"selected\" value=\"$s[0]\">$s[0]</option>";
+		}
+		else
+		{
+			$kolory_filtr .= "<option value=\"$s[0]\">$s[0]</option>";
+		}
+	}
+
+
+
+	
+		echo $kolory_filtr; ?>
   </select>
   </span>
 
@@ -395,7 +444,24 @@ div.content .filtruj_btn a , div.content .powrot_btn a{
   <span class="filtr_nazwa">material:</span>
   <select name="material" id="material" class="material">
   	  <option value="-1">wybierz</option>
-	<? echo $material_filtr; ?>
+	<? 		$query_material="SELECT nazwa FROM s_material";
+		//$sql_tagi = $wpdb->get_results($query_material, ARRAY_N);
+		$sql_mat = mysql_query($query_material);
+		//foreach ( $sql_tagi as $s )
+		while($s = mysql_fetch_array($sql_mat))		
+		{
+			if($material === $s[0])
+			{
+				$material_filtr .= "<option selected=\"selected\" value=\"$s[0]\">$s[0]</option>";
+				//$material_filtr2 .= "<span class=\"selectOption\" selected=\"selected\" value=\"$s[0]\">$s[0]</span>";
+			}
+			else
+			{
+				$material_filtr .= "<option value=\"$s[0]\">$s[0]</option>";
+				//$material_filtr2 .= "<span class=\"selectOption\" value=\"$s[0]\">$s[0]</span>";
+			}
+		}
+		echo $material_filtr; ?>
   </select>
   </span>
     
@@ -404,13 +470,7 @@ div.content .filtruj_btn a , div.content .powrot_btn a{
 </div>
   <?php // skrypt pobierajacy dane z SQL 
 
-$connection = @mysql_connect('localhost', 'root', '');// or die("Connection error !");
-$db = @mysql_select_db('bollo_naopak', $connection);
-	mysql_set_charset('utf8',$connection); 
-	mysql_query('SET character_set_connection=utf8');
-	mysql_query('SET character_set_client=utf8');
-	mysql_query('SET character_set_results=utf8');
-	mysql_query('set names utf8;');
+
 	
 if (!empty($_GET['prod_id'])) {
 

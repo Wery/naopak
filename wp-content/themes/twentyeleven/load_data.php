@@ -56,7 +56,8 @@ else
 		}
 	}
 		
-	if(isset($params['subcat']))
+	$subcat_id = "";
+	if(isset($params['subcat'])&&$params['subcat']!=="all")
 	{
 		$subcat_id = $params['subcat'];
 		$tmp_value = ' t_subcategory.subID = '.$subcat_id.' ';
@@ -64,7 +65,7 @@ else
 	}
 
 	
-	
+	$cat_id = "";
 	if (isset($params['cat'])&&$params['cat']!=="all")
 	{ 
 		$cat_id = $params['cat'];
@@ -220,7 +221,7 @@ $query_lista_g.=" LIMIT $start, $per_page";
 $query_pag_data = $query_lista_g;//"SELECT msg_id,message from messages LIMIT $start, $per_page";
 
 //$msg = $query_pag_data;
-//echo $msg;
+//echo $query_pag_data;
 $result_pag_data = mysql_query($query_pag_data) or die('MySql Error: ' . mysql_error());
 $msg = "";
 //****************************************
@@ -294,9 +295,10 @@ if($show == 0){
 	{
 		$img_tag = "<img src=\"http://naopak.com.pl/$pic\" alt=\"image\" />";
 	}
-
+		$page=$params['page'];
 		$galeria .= "<td><div id=\"produkt\">
-		<a class=\"link_css\" href=\"http://naopak.com.pl/item?prod_id=".$id_prod."\">		
+		<a class=\"link_css\" href=\"http://naopak.com.pl/item?prod_id=".$id_prod."
+&cat=$cat_id&subcat=$subcat_id&page=$page&cena_max=$cena_max&cena_min=$cena_min&kolor=$kolor&material=$material\">		
 		<div id=\"obraz_produktu\">$img_tag</div> 
 		<div id=\"nazwa_produktu\">$nazwa</div>  
 		<div id=\"info_produktu\">

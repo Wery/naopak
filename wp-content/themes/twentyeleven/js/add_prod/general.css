@@ -84,9 +84,10 @@
 #add_product_form input.error{
 	background: #f8dbdb;
 	border-color: #e77776;
+	
 }
 #add_product_form textarea{
-	width: 550px;
+	width: 460px;
 	height: 80px;
 	padding: 6px;
 	color: #000;

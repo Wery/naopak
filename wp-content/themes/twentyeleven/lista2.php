@@ -17,7 +17,21 @@ session_start();
 
 //******************************************************************** WHERE QUERY
 //********************************************************************	
-// page=2&
+
+	//$material = $_GET['material'];
+	if(isset($_GET['material'])) $material = $_GET['material']; else $material = "";
+	if(isset($_GET['kolor'])) $kolor = $_GET['kolor']; else $kolor = "";
+	//$cena_min = $_GET['cena_min'];
+	if(isset($_GET['cena_min'])) $cena_min = $_GET['cena_min']; else $cena_min = "";
+	if(isset($_GET['cena_max'])) $cena_max = $_GET['cena_max']; else $cena_max = "";
+	//$cena_max = $_GET['cena_max'];
+	//$cat = $_GET['cat'];
+	if(isset($_GET['cat'])) $cat = $_GET['cat']; else $cat = "";
+	if(isset($_GET['subcat'])) $subcat = $_GET['subcat']; else $subcat = "";
+	//$subcat = $_GET['subcat'];
+	
+
+		
 /*
 	$where_array = Array();
 	$array_index=0;
@@ -718,13 +732,17 @@ jQuery(document).ready(function(){
 	$("#customForm").submit(function() {
 		var showMode = $("#showForm input[name='show']").val();
 		var page = $("input[name='page']").val();
+		
+		$("input[name='subcategory']").val();
+		
 		loadData(page,showMode);
 		return false;
 	});
 	
 	$("#czysc_filtr_btn").click(function() {
 		console.log("czysc_filtr_btn");
-		$('#customForm').get(0).reset();
+		//$('#customForm').get(0).reset();
+		$(".cena").val("");
 		$(".sbSelector").text("wybierz");
 		$("#material").val("-1");		
 		$("#kolor").val("-1");
@@ -754,14 +772,24 @@ jQuery(document).ready(function(){
 		var $this_obj = $(this);
 		var showMode = $("#showForm input[name='show']").val();
 		var page = $("input[name='page']").val();
-		$("input[name='category']").val($(this).attr("id"));
-		var cat = "";
-		if($(this).attr("class")=="link_all")
-			cat = "all";
+
+		
+		var subcat = "";
+		if($(this).hasClass("link_all"))//=="link_all")
+		{
+			console.log("0 link_all subcat: "+subcat);
+			subcat = "all";
+		}
 		else
-			cat = $(this).attr("id").substring(4);
+		{
+			subcat = $(this).attr("id").substring(4);		 	
+		}
+		$("input[name='subcategory']").val(subcat);
+		$("input[name='category']").val("all");
+		var cat = "all";
 		
 		console.log("cat: "+cat);
+		console.log("subcat: "+subcat);
 		
 		if($(this).attr('class')=="link_all")
 		{
@@ -789,7 +817,7 @@ jQuery(document).ready(function(){
 				else
 					$(this).removeClass("on");					
 			});
-		loadData(page,showMode,cat);	
+		loadData(page,showMode,cat,subcat);	
 		return false;
 	// zapamietywac categorie
 	// poprawic kategorie nad kolorami
@@ -802,24 +830,44 @@ jQuery(document).ready(function(){
 		  $('#loading').fadeOut('fast');
 	  }             
 	     
-	  function loadData(page,showMode,cat){
+	  function loadData(page,showMode,cat,subcat){
  	     
 		 loading_show();  
   	     var form_serialize = $("#customForm :input").serialize();
 		 //var showMode = $("#showForm input[name='show']").attr("value");
 		 console.log("show mode: "+showMode);
 		 var formData = "";
+		 // ustawic odpowiednia kategorei w menu
 		 if (typeof cat == 'undefined')
 		 {
+			 console.log("undefined cat: "+$("input[name='category']").val());
 			 if($("input[name='category']").val()!="all")
-				 var cat = $("input[name='category']").val().substring(4);		 	
+				 var cat = $("input[name='category']").val();	 	
 			 else
 				 var cat = "all"; 
 		 }
-		 
+		 if (typeof subcat == 'undefined')
+		 {
+			 var subcat = $("input[name='subcategory']").val();
+			 console.log("undefined subcat: "+subcat);			 			 
+			 if(subcat!="all")
+				 if (subcat.indexOf("sub_") >= 0)
+			 	 {
+					 var subcat = $("input[name='subcategory']").val().substring(4);		 	
+				 }
+				 else
+				 {
+					 var subcat = $("input[name='subcategory']").val();		 	
+			     }
+			 else
+				 var subcat = "all"; 
+		 }
 		 console.log("loadData cat: "+cat);
+		 console.log("loadData subcat: "+subcat);
 		 
-		 formData = "cat="+cat+"&show="+showMode+"&page="+page+"&"+form_serialize;
+		 
+		 
+		 formData = "cat="+cat+"&subcat="+subcat+"&show="+showMode+"&page="+page+"&"+form_serialize;
 		 console.log("\n\nSerialized input string\n"+formData+"\n\npage="+page);
 		 
 		  $.ajax
@@ -907,11 +955,11 @@ function enableSelectBoxes(){
 
 	$query_menu = "SELECT t_category.id, t_category.nazwa AS cat_nazwa, t_subcategory.subID, t_subcategory.nazwa AS sub_nazwa, t_subcategory.catID FROM t_category LEFT JOIN t_subcategory ON t_category.id = t_subcategory.catID ORDER BY `t_category`.`id` ASC LIMIT 0 , 30";
 	
-		$sql_menu = mysql_query($query_menu);
+	  $sql_menu = mysql_query($query_menu);
       $menu=""; 
 	  $poprzednia_nazwa_kategorii = "";
 	  $x=0;
-	  $subkat = $subcat_id;
+	  $subkat = $subcat;
 
 	  $link = get_permalink(). "?" .http_build_query($_GET);
 	  $menu .= '<div id="wrapper">'; 
@@ -928,7 +976,7 @@ function enableSelectBoxes(){
 					$x=0;
 				}
 			
-				if($cat_id===$s[0])
+				if($cat===$s[0])
 				{
 					 
 					$menu .= '<div class="accordionButton on">'.$aktualna_nazwa_kategorii.'</div>';
@@ -1022,7 +1070,8 @@ function enableSelectBoxes(){
     <div class="galeria_lista">    
     
     <form id="showForm" method="post">
-     <input type="hidden" name="category" value="all" />
+     <input type="hidden" name="subcategory" value="<? if($subcat!=="") echo $subcat; else echo "all"; ?>" />
+     <input type="hidden" name="category" value="<? if($cat!=="") echo $cat; else echo "all"; ?>" />
     <input type="hidden" value="<? 	
 	if(isset($_SESSION["show_method"]))
 	{
@@ -1039,7 +1088,6 @@ function enableSelectBoxes(){
     	<div class="filtr_listy">
         
    <form  id="customForm" method="post" enctype="text/plain" >
-   
     <span class="filtruj_span">
 		<!--<a id="filtruj" href="#" >filtruj</a>-->
         <input id="czysc_filtr_btn" class="filtruj_btn" type="button" value="wyczyść filtr">
@@ -1048,12 +1096,26 @@ function enableSelectBoxes(){
  
     <span class="filtr_ceny_do"> 
     <span class="filtr_nazwa">do:</span>
-    <input name="cena_max" class="cena" type="text" >
+    <input name="cena_max" class="cena" type="text"
+        <? 	
+		if($cena_max != '')
+		{
+			echo 'value="'.$cena_max.'"';
+		}		
+		?>
+     >
     </span>
     
     <span class="filtr_ceny_od"> 
     <span class="filtr_nazwa">od:</span>
-    <input name="cena_min" class="cena" type="text" >
+    <input name="cena_min" class="cena" type="text" 
+        <? 	
+		if($cena_min != '')
+		{
+			echo 'value="'.$cena_min.'"';
+		}		
+		?>
+         >
     </span>    
   
   <span class="filtr_koloru">
@@ -1089,4 +1151,14 @@ function enableSelectBoxes(){
 </div>  <?php // closeing <div class="lista produktow"> ?>
 </div> <?php  // closeing <div class="main_content"> ?>
 </div> <?php // closeing <div class="hfeed content"> ?>
-<?php get_footer(); ?>
+<?php get_footer(); /*
+
+	echo "<p><br /><br />
+		kolor = $kolor	<br />
+		material = $material <br />
+		cena_min = $cena_min <br />
+		cena_max = $cena_max <br />
+		cat = $cat <br />
+		subcat = $subcat
+		<br /><br /></p>";
+		*/ ?>

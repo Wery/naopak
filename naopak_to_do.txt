@@ -36,7 +36,7 @@ PRODUCT DISPLAY:
 - dodaj do ulubionych
 - kontakt
 - like facebookowe
-- powrot
++ powrot
 - cena wysylki
 
 LISTA (obie wersje):
@@ -45,7 +45,7 @@ LISTA (obie wersje):
 
 LISTA (nie galeria):
 + ograniczyc opis
-- css ceny
++ css ceny
 
 KOSZYK:
 - obliczanie wysylki
@@ -63,7 +63,7 @@ DODAJ PRODUKT:
 + dodac wage produktu
 - wypisywanie uzytego ostatnio filtru
 - dodaj zdjecie -> dodja kolejne zdj
-- pole opis, na szerokosc jak oryginalnie, zeby widac jak wyglada tekst
++ pole opis, na szerokosc jak oryginalnie, zeby widac jak wyglada tekst
 + dodajac zdjecia, proporcjonalnie robic min wielkosc cropa
 
 EDYTUJ PRODUKT:
@@ -71,6 +71,7 @@ EDYTUJ PRODUKT:
 + dodajac zdjecia, proporcjonalnie robic min wielkosc cropa
 - jak jest max kpl. zdjec, to wylaczac przycisk dodawania
 - usowac zdjecia dodane i zaraz usuniete
+- dodane nowe zdjecie, nie moze byc od razu zapisywane w BD, a dopiero po "zapisz zmiany" (jak usowac, gdy nie zapisze zmian ?)
 
 SZCZEGOLY PRODUCENTA:
 + dostosowac do wygladu konta

@@ -22,6 +22,22 @@
 	//echo "\nprint_r\n".print_r($params);
 	//echo "\n\n";
 
+function delete($dirname, $file_to_del)//************************** delete
+{
+	global $img_array;
+	if (!file_exists($dirname)) {
+	  return false;
+	}
+	
+	foreach(glob($dirname.$file_to_del."_*.jpg") as $file){			
+		if( !in_array(substr(basename($file),0,-6), $img_array) )
+		{		
+			echo "deleting: ".substr(basename($file),0,-6)."\n";	
+			unlink($file);
+		}			
+	}
+}
+
 
 	//echo print_r($img_array);
 	$output = '';
@@ -99,27 +115,38 @@
 	@mysql_query($sql_update_tag_query);
 	@mysql_query($sql_update_product_query);
 	
-		
+	$dirname = '../../../img/products/'.$prod_id.'/';
+	
 	$sql = "UPDATE s_zdjecia SET ";
 	$max=count($img_array);
 	// uwzglednic warunekt na reszte zdjec...
-	for($i=1;$i<=$max;$i++)
-    { 
-		if($i==$max)
-		    $sql .= "zdj".($i)." = '".$img_array[$i-1]."' ";
-		else
-			$sql .= "zdj".($i)." = '".$img_array[$i-1]."', ";
+	for($i=1;$i<=7;$i++)
+    { 		
+		if($i<=$max)			
+		{
+			$file=$img_array[$i-1];
+			if($max==7)		
+				$sql .= "zdj".($i)." = '".$file."' ";
+			else
+				$sql .= "zdj".($i)." = '".$file."', ";
+			delete($dirname, $file);
+		}
+		else 
+		{
+			if($i==7)		
+				$sql .= "zdj".($i)." = '' ";		
+			else
+				$sql .= "zdj".($i)." = '', ";
+		}		
     }	
 
 	$sql .= " WHERE id_produkt = '".$prod_id."'";
 	
-	echo "\nFOTO QUERY:\n".$sql;
+	echo "\nFOTO QUERY:\n".$sql;	
 	
 	mysql_query($sql);	
 	
 	mysql_close($connection); 
 
-	echo "\n\nTAG QUERY:\n".$sql_update_tag_query."\n\nPROD QUERY:\n".$sql_update_product_query;
-	
-
+	echo "\n\nTAG QUERY:\n".$sql_update_tag_query."\n\nPROD QUERY:\n".$sql_update_product_query;	
 ?>

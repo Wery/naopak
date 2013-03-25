@@ -323,6 +323,9 @@ body, input, textarea {
 	font-weight: 300;
 	line-height: 1.625;
 }
+textarea{
+	resize: none;
+}
 body {
 	background: #fff;
 }

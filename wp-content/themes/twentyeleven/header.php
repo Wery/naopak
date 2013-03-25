@@ -237,7 +237,7 @@ $num_rows = mysql_num_rows($result);
 $i = 1;
 while($row = mysql_fetch_array($result))
 {
-	echo '<a href="' . get_bloginfo('url') . '/lista?cat=' . $row['id'] .'" target="_self">' . $row['nazwa'] . '</a><img src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/line.png" />   ';
+	echo '<a href="' . get_bloginfo('url') . '/lista2?cat=' . $row['id'] .'" target="_self">' . $row['nazwa'] . '</a><img src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/line.png" />   ';
 	if($i == $num_rows)
 	{
 		echo '<a id="main-menuTrigger" href="#" target="_self">inne</a>   ';
@@ -259,13 +259,13 @@ function generateSubmenu() {
 		{
 			echo "<tr>";
 			echo "<td>";
-			echo '<a href="' . get_bloginfo('url') . '/lista?subcategory=' . $row['subID'] . '" target="_self">' . $row['nazwa'] . '</a>';
+			echo '<a href="' . get_bloginfo('url') . '/lista2?subcat=' . $row['subID'] . '" target="_self">' . $row['nazwa'] . '</a>';
 			echo "</td>";
 		}
 		else
 		{
 			echo "<td>";
-			echo '<a href="' . get_bloginfo('url') . '/lista?subcategory=' . $row['subID'] . '" target="_self">' . $row['nazwa'] . '</a>';
+			echo '<a href="' . get_bloginfo('url') . '/lista2?subcat=' . $row['subID'] . '" target="_self">' . $row['nazwa'] . '</a>';
 			echo "</td>";
 			echo "</tr>";		
 		}
@@ -301,18 +301,18 @@ function generateSubmenu() {
 	SLIDER
 -->
 	<div class="home-color-bar">
-     	<div class="home-color-item" id="color1"><a href="<?php echo get_bloginfo('url'); ?>/lista?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_yellow.png"  height="40px" width="80px"></a></div>
-        <div class="home-color-item" id="color2"><a href="<?php echo get_bloginfo('url'); ?>/lista?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_orange.png"  height="40px" width="80px"></a></div>
-        <div class="home-color-item" id="color3"><a href="<?php echo get_bloginfo('url'); ?>/lista?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_green.png"  height="40px" width="80px"></a></div>
-        <div class="home-color-item" id="color4"><a href="<?php echo get_bloginfo('url'); ?>/lista?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_red.png"  height="40px" width="80px"></a></div>
-        <div class="home-color-item" id="color5"><a href="<?php echo get_bloginfo('url'); ?>/lista?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_blue.png"  height="40px" width="80px"></a></div>
-        <div class="home-color-item" id="color6"><a href="<?php echo get_bloginfo('url'); ?>/lista?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_purple.png"  height="40px" width="80px"></a></div>
-        <div class="home-color-item" id="color7"><a href="<?php echo get_bloginfo('url'); ?>/lista?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_brown.png"  height="40px" width="80px"></a></div>
-        <div class="home-color-item" id="color8"><a href="<?php echo get_bloginfo('url'); ?>/lista?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_grey.png"  height="40px" width="80px"></a></div>
-        <div class="home-color-item" id="color9"><a href="<?php echo get_bloginfo('url'); ?>/lista?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_grey.png"  height="40px" width="80px"></a></div>
-        <div class="home-color-item" id="color10"><a href="<?php echo get_bloginfo('url'); ?>/lista?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_grey.png"  height="40px" width="80px"></a></div>
-        <div class="home-color-item" id="color11"><a href="<?php echo get_bloginfo('url'); ?>/lista?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_grey.png"  height="40px" width="80px"></a></div>
-        <div class="home-color-item" id="color12"><a href="<?php echo get_bloginfo('url'); ?>/lista?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_grey.png"  height="40px" width="80px"></a></div>
+     	<div class="home-color-item" id="color1"><a href="<?php echo get_bloginfo('url'); ?>/lista2?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_yellow.png"  height="40px" width="80px"></a></div>
+        <div class="home-color-item" id="color2"><a href="<?php echo get_bloginfo('url'); ?>/lista2?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_orange.png"  height="40px" width="80px"></a></div>
+        <div class="home-color-item" id="color3"><a href="<?php echo get_bloginfo('url'); ?>/lista2?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_green.png"  height="40px" width="80px"></a></div>
+        <div class="home-color-item" id="color4"><a href="<?php echo get_bloginfo('url'); ?>/lista2?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_red.png"  height="40px" width="80px"></a></div>
+        <div class="home-color-item" id="color5"><a href="<?php echo get_bloginfo('url'); ?>/lista2?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_blue.png"  height="40px" width="80px"></a></div>
+        <div class="home-color-item" id="color6"><a href="<?php echo get_bloginfo('url'); ?>/lista2?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_purple.png"  height="40px" width="80px"></a></div>
+        <div class="home-color-item" id="color7"><a href="<?php echo get_bloginfo('url'); ?>/lista2?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_brown.png"  height="40px" width="80px"></a></div>
+        <div class="home-color-item" id="color8"><a href="<?php echo get_bloginfo('url'); ?>/lista2?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_grey.png"  height="40px" width="80px"></a></div>
+        <div class="home-color-item" id="color9"><a href="<?php echo get_bloginfo('url'); ?>/lista2?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_grey.png"  height="40px" width="80px"></a></div>
+        <div class="home-color-item" id="color10"><a href="<?php echo get_bloginfo('url'); ?>/lista2?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_grey.png"  height="40px" width="80px"></a></div>
+        <div class="home-color-item" id="color11"><a href="<?php echo get_bloginfo('url'); ?>/lista2?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_grey.png"  height="40px" width="80px"></a></div>
+        <div class="home-color-item" id="color12"><a href="<?php echo get_bloginfo('url'); ?>/lista2?kolor=czarny" class="home-color-link" target="_self"><img alt="color-bar" class="home-color-image" src="http://naopak.com.pl/wp-content/themes/twentyeleven/images/color_tab_grey.png"  height="40px" width="80px"></a></div>
     </div>
 <?php
 function Connect() {
@@ -343,7 +343,7 @@ function getMaterialsList($kolor) {
 	{
 		echo "<tr>";
 		echo "<td>";
-		echo '<a href="' . get_bloginfo('url') . '/lista?material=' . $row['nazwa'] . '&kolor=' . $kolor .'" target="_self">' . $row['nazwa'] . '</a>';
+		echo '<a href="' . get_bloginfo('url') . '/lista2?material=' . $row['nazwa'] . '&kolor=' . $kolor .'" target="_self">' . $row['nazwa'] . '</a>';
 		echo "</td>";
 		echo "</tr>";		
 	}
