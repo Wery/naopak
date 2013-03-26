@@ -373,10 +373,11 @@ $max=count($_SESSION['cart']);
 					
 					$pic = "img/products/$pid/$img_result[2]_t.jpg";
 		
-					$sql_results = $wpdb->get_row("SELECT s_produkt.id_projektant, s_producenci.nazwa FROM s_produkt INNER JOIN s_producenci ON s_produkt.id_projektant = s_producenci.id WHERE s_produkt.prod_id ='".$pid."'", ARRAY_N);
+					$sql_results = $wpdb->get_row("SELECT s_produkt.id_projektant, s_producenci.nazwa, sprodukt.waga FROM s_produkt INNER JOIN s_producenci ON s_produkt.id_projektant = s_producenci.id WHERE s_produkt.prod_id ='".$pid."'", ARRAY_N);
 							
 					$actual_producer_id = $sql_results[0];
 					$actual_producer_name = $sql_results[1];
+					$actual_weight = $sql_results[2];
 					//echo "<br />pid= $pid ,  producent: $actual_producer_id<br />";
 					$pname = get_product_name($pid);
 					//echo "</br>pid = $pid</br>";
