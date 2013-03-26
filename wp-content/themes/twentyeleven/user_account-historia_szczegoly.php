@@ -6,11 +6,11 @@
  * @url: http://www.customweb.com
 
  Template Name: User Account - historia szczegoly
- */
- ?>
+ 
+ */	
+?>
 
 <?php
-	
 function add_scripts()
 {
 	echo '<link rel="stylesheet" type="text/css" href="'.get_bloginfo('template_url').'/css/table_style.css"/>';
@@ -32,11 +32,77 @@ function add_scripts()
 	
 	});
 	
-	</script>
-	';
+	</script>';
 }
 add_action('wp_head', 'add_scripts');
+
+get_header();
+
 ?>
+	<script language="javascript">
+	jQuery(document).ready(function(){
+	
+   jQuery('.submenu_group').each(function(){
+		var div = jQuery(this).find('.submenu_active').length;		
+		if(div==0)
+		{
+			jQuery(this).hide();
+		}
+	});
+
+	// ********************************
+	
+
+	//ACCORDION BUTTON ACTION (ON CLICK DO THE FOLLOWING)
+		
+	jQuery('.accordionButton').click(function() {
+
+		//REMOVE THE ON CLASS FROM ALL BUTTONS
+		jQuery('.accordionButton').removeClass('on');
+		  
+		//NO MATTER WHAT WE CLOSE ALL OPEN SLIDES
+	 	jQuery('.accordionContent').slideUp('normal');
+   
+		//IF THE NEXT SLIDE WASN'T OPEN THEN OPEN IT
+		if(jQuery(this).next().is(':hidden') == true) {
+			
+			//ADD THE ON CLASS TO THE BUTTON
+			jQuery(this).addClass('on');
+			  
+			//OPEN THE SLIDE
+			jQuery(this).next().slideDown('normal');
+		 } 
+		  
+	 });
+	  
+	
+	/*** REMOVE IF MOUSEOVER IS NOT REQUIRED ***/
+	
+	//ADDS THE .OVER CLASS FROM THE STYLESHEET ON MOUSEOVER 
+	jQuery('.accordionButton').mouseover(function() {
+		jQuery(this).addClass('over');
+		
+	//ON MOUSEOUT REMOVE THE OVER CLASS
+	}).mouseout(function() {
+		jQuery(this).removeClass('over');										
+	});
+	
+	/*** END REMOVE IF MOUSEOVER IS NOT REQUIRED ***/
+	
+	
+	/********************************************************************************************************************
+	CLOSES ALL S ON PAGE LOAD
+	********************************************************************************************************************/	
+	jQuery('.accordionContent').hide();
+	jQuery('.submenu_active').parent().show();	
+	jQuery('.submenu_active').parent().prev('.accordionButton').addClass('on');
+	
+	jQuery('.cat_selected').show();
+	
+	});
+	
+	</script>
+
 <style>
 
 #main_contetn{
@@ -52,41 +118,17 @@ add_action('wp_head', 'add_scripts');
 	margin-left:15px;
 }
 
-
 #center_content{
 	float:left;
 	margin-left:10px;
 	position:relative;
 }
 
-div.content dd{
+dd{
 	margin-bottom:0px;	
 	margin-left:15px;
 }
 
-.modal, .croping {
-		background-color:#fff;
-		display:none;
-		width:690px;
-		padding:15px;
-		text-align:center;
-		border:2px solid #333;
-		position:absolute;
-
-		opacity:1;
-		-moz-border-radius:6px;
-		-webkit-border-radius:6px;
-		-moz-box-shadow: 0 0 50px #ccc;
-		-webkit-box-shadow: 0 0 50px #ccc;
-}
-
-.modal h2 {
-		background:url(/img/global/info.png) 0 50% no-repeat;
-		margin:0px;
-		padding:10px 0 10px 45px;
-		border-bottom:1px solid #333;
-		font-size:20px;
-}
 
 div.content a.menu{
 	text-decoration:none;
@@ -109,40 +151,133 @@ div.content a:hover.over {color:#1fb5da; text-decoration:none; } /* mouse over l
 div.content a:active.over {color:#1fb5da; text-decoration:none; } /* selected link */
 	
 div.content .on{
-	/*background: #990000;*/
 	color:#1fb5da;
 	}
 	
 div.content .over{
 	color: #1fb5da;
-	/*background: #CCCCCC;*/
-	}	
+	}		
 	
-.hfeed.content #main_contetn #center_content #myTable tr td {
-	text-align: center;
+#mapa_listowanie{
+	float:left;
+	position:relative;
+	width:100%;
+	margin-bottom:5px;
+}
+.mapa{
+	margin-top:5px;
+	float:left;
+	font-size:12px;
+}
+#menu{
+	float:left;
+	position:relative;
+	padding-right:10px;
+	/*margin-left:15px;*/
+	clear:left;
+	width:211px;
 }
 
-.hfeed.content #main_contetn #center_content #myTable2 tr td {
-	text-align: center;
+#filter{
+	font-size:10px;
+	background-color:#e3e3e3;
+	padding: 2px 0px 2px 4px;
 }
+
+#right_content_page{
+	width: 750px;
+	float:right;
+	margin-left:10px;
+	margin-right:12px;
+	position:relative;
+}	
+
+#wrapper {
+	width: 190px;
+	margin-top:15px;
+	margin-left: 20px;
+	margin-right: auto;
+	font-weight:bold;
+	font-size:14px;
+	}
+
+.accordionButton {	
+	width: 190px;
+	float: left;
+	_float: none;  /* Float works in all browsers but IE6 */
+	/*background: #003366;*/
+	border-bottom: 1px dashed black;
+	cursor: pointer;
+	
+	}
+.accordionButtonLink {	
+	width: 190px;
+	float: left;
+	_float: none;  /* Float works in all browsers but IE6 */
+	/*background: #003366;*/
+	border-bottom: 1px dashed black;
+	cursor: pointer;
+	}	
+div.content .accordionButtonLink a{
+	text-decoration:none;
+	color:#000;
+}
+div.content .accordionButtonLink a:hover{
+	text-decoration:none;
+	color:#1fb5da;
+}	
+div.accordionContentMenu a.submenu_inactive{
+	color: black; 
+	text-decoration: none; 
+	}
+	
+div.accordionContentMenu a.submenu_active{
+	color: #1fb5da; 
+	text-decoration: none; 
+	}
+
+.accordionContentMenu {	
+	font-weight:normal;
+	width: 170px;
+	margin-left:20px;
+	float: left;
+	_float: none; /* Float works in all browsers but IE6 */
+	/*background: #95B1CE;*/
+	}
+.on {
+	/*background: #990000;*/
+	color:#1fb5da;
+	}
+	
+.over {
+	color: #1fb5da;
+	/*background: #CCCCCC;*/
+	}
+		
 </style>
-<?
-get_header();
-
-?>
 <link rel="stylesheet" href="<?php echo get_bloginfo('template_url') ?>/pm/general.css" type="text/css"/>
+
+
+
 <div class="hfeed content">
 <div id="main_contetn">
 <?php
 
 if ( is_user_logged_in() ) {
+?>
 
+<div id="mapa_listowanie">
+	<div class="mapa">jesteś tutaj: <?php echo $_SERVER['REQUEST_URI']; ?></div>
+</div>
+<? include "menu.php"; ?>
+<div id="right_content_page" >
+<?
     global $current_user;
 	//global $wpdb;
 	$wpdb = new wpdb('root', '', 'bollo_naopak', 'localhost');
     
 	$id_zamowienia = $_GET['id_zam'];
-	
+	//echo "<br />id_zam = $id_zamowienia<br />";
 	//$content = 'Welcome, ';
     //$content .= 'User first name: ' . $current_user->user_firstname;
     //$content .= 'User last name: ' . $current_user->user_lastname;
@@ -150,15 +285,15 @@ if ( is_user_logged_in() ) {
     $user_roles = $current_user->roles;
     $user_role = array_shift($user_roles);
 
-	include("menu.php");
+
 
 	$lista="";
 	$query_lista_prod = "
 	SELECT s_produkt.nazwa AS produkt_nazwa, s_produkt.cena, s_producenci.nazwa AS projektant
 	FROM s_zamowione_produkty
-	INNER JOIN s_produkt ON s_produkt.id = s_zamowione_produkty.id_produkt
+	INNER JOIN s_produkt ON s_produkt.prod_id = s_zamowione_produkty.id_produkt
 	LEFT JOIN s_producenci ON s_producenci.id = s_produkt.id_projektant
-	WHERE  s_zamowione_produkty.id_zamowienia =  ".$id_zamowienia;
+	WHERE  s_zamowione_produkty.id_zamowienia =  '".$id_zamowienia."'";
 
 	$sql_results = $wpdb->get_results($query_lista_prod, ARRAY_N);
 	
@@ -205,7 +340,7 @@ if ( is_user_logged_in() ) {
 	SELECT s_historia.data, s_status_zamowienia.nazwa, s_historia.komentarz
 	FROM s_historia
 	INNER JOIN s_status_zamowienia ON s_status_zamowienia.id = s_historia.id_status
-	WHERE s_historia.id_zamowienia =  ".$id_zamowienia;
+	WHERE s_historia.id_zamowienia =  '".$id_zamowienia."'";
 
 	$sql_results = $wpdb->get_results($query_lista_prod, ARRAY_N);
 	
@@ -271,17 +406,14 @@ if ( is_user_logged_in() ) {
         <input id="submit" type="submit" name="submit" value="Wyślij" style="width:115px;" /> <input id="send" type="reset" name="anuluj" value="Anuluj" style="width:115px;" />
     </div>
 </form>
+</div>
 <?php 
 }
 ?>
-</div>  <?php // closeing <div class="center produktow"> ?>
-	
 <?php
 } else {
     echo 'Welcome, visitor!';
-	echo '<br><br> tu bedzie redirect!';
 }
-
 ?>
 </div> <?php // closeing <div class="main_content"> ?>
 </div> <?php // closeing <div class="hfeed content"> ?>

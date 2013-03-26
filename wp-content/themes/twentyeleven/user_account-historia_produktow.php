@@ -289,19 +289,22 @@ if ( is_user_logged_in() ) {
     $user_role = array_shift($user_roles);
 
 	$lista="";
-	$query_historia = "SELECT s_zamowienie.id, s_zamowienie.data AS data_zamowienia, s_status_zamowienia.nazwa, h1.data AS data_aktualizacji, SUM( s_produkt.cena ) AS wartosc
-FROM s_historia h1
-INNER JOIN s_zamowienie ON h1.id_zamowienia = s_zamowienie.id
-INNER JOIN s_status_zamowienia ON h1.id_status = s_status_zamowienia.id
-INNER JOIN s_zamowione_produkty ON s_zamowione_produkty.id_zamowienia = s_zamowienie.id
-INNER JOIN s_produkt ON s_zamowione_produkty.id_produkt = s_produkt.id
-WHERE h1.data = ( 
+	$query_historia = "SELECT zam.nr_zamowienia AS nr_zamowienia, zam.data AS data_zamowienia, hist1.data AS data_aktualizacji, s_status_zamowienia.nazwa AS status_nazwa, SUM( s_produkt.cena ) AS wartosc
+FROM s_zamowienie zam
+INNER JOIN s_historia hist1 ON hist1.id_zamowienia = nr_zamowienia
+INNER JOIN s_status_zamowienia ON hist1.id_status = s_status_zamowienia.id
+INNER JOIN s_zamowione_produkty ON s_zamowione_produkty.id_zamowienia = nr_zamowienia
+INNER JOIN s_produkt ON s_zamowione_produkty.id_produkt = s_produkt.prod_id
+WHERE hist1.data = ( 
 SELECT MAX( data ) 
 FROM s_historia h2
-WHERE h1.id_zamowienia = h2.id_zamowienia ) 
-AND s_zamowienie.id_klient = ".$current_user->ID." 
-GROUP BY s_zamowienie.id
+WHERE h2.id_zamowienia = hist1.id_zamowienia ) 
+AND zam.id_klient = ".$current_user->ID."
+GROUP BY nr_zamowienia
 LIMIT 0 , 30";
+
+	
+echo "<br />$query_historia<br />";
 
 	$sql_results = $wpdb->get_results($query_historia, ARRAY_N);
 	
@@ -328,8 +331,8 @@ LIMIT 0 , 30";
 	{ 	
 	  $id_zam=$row[0];
 	  $data_zam=$row[1];
-	  $status=$row[2];
-	  $data_aktualizacji=$row[3];
+	  $status=$row[3];
+	  $data_aktualizacji=$row[2];
 	  $wartosc=$row[4]; 
 	  $wartosc = number_format($wartosc, 2, ",", " ");	
 	 // $lista .= "<tr>";

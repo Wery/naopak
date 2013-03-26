@@ -350,7 +350,7 @@ $max=count($_SESSION['cart']);
 //echo "</br>max = $max</br>";
 // pojedynczy projektant
 
-global $wpdb;
+	$wpdb = new wpdb('root', '', 'bollo_naopak', 'localhost');
  
 	$produkty = Array();
 	$produkty_producenta='';
@@ -377,7 +377,7 @@ global $wpdb;
 							
 					$actual_producer_id = $sql_results[0];
 					$actual_producer_name = $sql_results[1];
-					//echo "</br>pid = $pid</br>";		
+					//echo "<br />pid= $pid ,  producent: $actual_producer_id<br />";
 					$pname = get_product_name($pid);
 					//echo "</br>pid = $pid</br>";
 					$price = get_price($pid);
