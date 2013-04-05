@@ -33,15 +33,38 @@ include("koszyk_functions.php");
 function add_scripts()
 {	
 
+echo '
+	<script type="text/javascript" src="'.get_bloginfo('template_url').'/js/jquery.selectbox-0.2.min.js"></script>';
+		echo '
+	<link rel="stylesheet" type="text/css" href="'.get_bloginfo('template_url').'/css/jquery.selectbox.css" media="screen" />';
+	
 	echo '<script language="javascript">
 	$(document).ready(function(){
-		
+	
+		$("select[name*=\'przesylka_producent_\']").selectbox();
 		
 		$("[name=remove]").click( function () {	
 			var pid = $(this).attr("alt");
 			del(pid);
 		});
 	
+		$("select[name*=\'przesylka_producent_\']").on("change",function () {
+
+			$(this).parent().next().children().next().text(parseInt($(this).val())+" zł"); 
+			var cala_wysylka=0;
+			$("span[name=\'kw_proj\']").each(function(){
+				cala_wysylka+=parseInt($(this).text());
+			});
+			var koszt_produktow=0;
+			$("span[name=\'kp_proj\']").each(function(){
+				koszt_produktow+=parseInt($(this).text());
+			});
+			$(".koszyk_koszt_calkowity").children().next("div:eq(3)").text(cala_wysylka+" zł");
+			var caly_koszt = cala_wysylka + koszt_produktow; 
+			$(".koszyk_koszt_calkowity").children().next("div:eq(4)").children().next().text(caly_koszt+" zł");
+			
+			//alert("cala_wysylka: "+cala_wysylka+"  koszt_produktow: "+koszt_produktow);//.css("color","red"); 
+		});
 	});
 	
 	
@@ -63,7 +86,6 @@ function add_scripts()
 		document.form1.submit();
 	}
 
-
 </script>';
 
 }
@@ -72,7 +94,9 @@ add_action('wp_head', 'add_scripts');
 get_header();
 
 ?>
+<script type="text/javascript">
 
+</script>
 <div class="hfeed content">
 
 <form name="form1" method="post">
@@ -111,7 +135,6 @@ get_header();
 }
 .koszyk_produkt{
 	background-color:#E1E1E1;	
-	width:990px;
 	height:70px;
 	padding-right:10px;
 }
@@ -151,6 +174,7 @@ get_header();
 	padding:0px;
 	height:auto;	
 	line-height:normal;
+	margin-top:10px;
 }
 .koszyk_produkt_cena_liczba{
 	min-width: 50px;
@@ -169,6 +193,7 @@ get_header();
 
 .koszyk_projektant, .koszyk_produkt{	
 	clear:both;
+	width: 982px;
 }
 
 .koszyk_projektant_nazwa{
@@ -189,15 +214,15 @@ get_header();
 	float:right;	
 	clear:both;
 	line-height:12px;
-	margin-right:10px;
+	/*margin-right:10px;*/
 	margin-top: 5px;
 }
 
 .koszyk_projektant_sum_wysylka{
-	float:right;	
-	clear:both;
+	display:inline-block;
 	line-height:12px;
-	margin-right:10px;
+	/*margin-right:10px;*/
+	vertical-align: middle;
 }
 
 .koszyk_zatwierdz{
@@ -313,6 +338,25 @@ div.content .btn_text a{
 	text-decoration: none;
 }	
 
+.sbOptions, .sbSelector{
+	width:150px;
+}
+.sbHolder{
+	width:150px;
+	float:right;
+	/*margin-top:10px;*/
+}
+.przesylkaSB{
+	display:inline-block;
+	margin-right:10px;
+	vertical-align: middle;
+}
+.przesylkaBox{
+	margin-top:5px;
+	float:right;
+	/*line-height: 50px;*/
+}
+
 </style>
 
 <br />
@@ -329,7 +373,7 @@ div.content .btn_text a{
     -->
     
     <span id="back_to_shopping" class="btn_text">
-		<a href="http://naopak.com.pl/lista" >Wróć do zakupów</a>
+		<a href="http://naopak.com.pl/lista2" >Wróć do zakupów</a>
     </span>
     
     <span id="save_basket" class="btn_text">
@@ -344,6 +388,14 @@ div.content .btn_text a{
     </div>
     
 <?
+
+
+function array_push_assoc($array, $key, $value, $key2, $value2){
+ $array[$key] = $value;
+ $array[$key2] = $value2;
+ return $array;
+ }
+ 
 //print_r($_SESSION['cart']);
 $max=count($_SESSION['cart']);
 //$_SESSION['test']="zmienna sesyjna";
@@ -352,6 +404,7 @@ $max=count($_SESSION['cart']);
 
 	$wpdb = new wpdb('root', '', 'bollo_naopak', 'localhost');
  
+	$przesylka_options = Array();
 	$produkty = Array();
 	$produkty_producenta='';
 	$kwota_produktow_producenta = 0;
@@ -373,15 +426,28 @@ $max=count($_SESSION['cart']);
 					
 					$pic = "img/products/$pid/$img_result[2]_t.jpg";
 		
-					$sql_results = $wpdb->get_row("SELECT s_produkt.id_projektant, s_producenci.nazwa, sprodukt.waga FROM s_produkt INNER JOIN s_producenci ON s_produkt.id_projektant = s_producenci.id WHERE s_produkt.prod_id ='".$pid."'", ARRAY_N);
+					$sql_results = $wpdb->get_row("SELECT s_produkt.id_projektant, s_producenci.nazwa, s_produkt.waga FROM s_produkt INNER JOIN s_producenci ON s_produkt.id_projektant = s_producenci.id WHERE s_produkt.prod_id ='".$pid."'", ARRAY_N);
 							
 					$actual_producer_id = $sql_results[0];
 					$actual_producer_name = $sql_results[1];
 					$actual_weight = $sql_results[2];
+					//$koszt_przesylki = kosztPrzesylki($pid, $actual_weight);
 					//echo "<br />pid= $pid ,  producent: $actual_producer_id<br />";
 					$pname = get_product_name($pid);
 					//echo "</br>pid = $pid</br>";
 					$price = get_price($pid);
+					
+					$sql = "SELECT cena, opis FROM s_koszty_przesylki WHERE prod_id ='".$pid."'";
+					//echo $sql."<br />";
+					$result = $wpdb->get_results($sql);
+					
+					$w=0;
+					foreach( $result as $results ) {				
+						/*$przesylka_options.= '<option value="'.$results->cena.'" >'.$results->opis."</option>";				*/		
+						$przesylka_options[$actual_producer_id][$pid][$w]=array_push_assoc($przesylka_options[$actual_producer_id][$pid][$w], 'cena', $results->cena, 'opis', $results->opis);	
+						$w++;						
+					}
+					
 					$x++;
 				$produkty_producenta = "   	  
 			<div class=\"koszyk_produkt\">
@@ -395,10 +461,7 @@ $max=count($_SESSION['cart']);
                 		<span class=\"blue_font big_font\">Cena produktu:</span>
                     	<span class=\"big_font koszyk_produkt_cena_liczba\">$price zł</span>
                 	</div>
-                	<div class=\"koszyk_produkt_wysylka small_font\">
-               			<span class=\"blue_font small_font\">koszt wysyłki:</span>
-                		<span class=\"small_font\"> $koszt_wysylki zł</span>
-               	 	</div>
+
         		</div>				
 					<a href=\"#\" class=\"remove_link\" name=\"remove\" alt=\"$pid\">usuń</a>
        		</div>";
@@ -406,36 +469,58 @@ $max=count($_SESSION['cart']);
 				$produkty[$actual_producer_id][0].=$produkty_producenta;
 				$produkty[$actual_producer_id][1]+=get_price($pid);
 				$produkty[$actual_producer_id][2]+=$koszt_wysylki;
+				$produkty[$actual_producer_id][3]=$przesylka_options[$actual_producer_id];//array_unique($przesylka_options);
 					
 				// array_push($producenci, $actual_producer_id);
 				// $position = array_search($array, $value);
-
 				 				
 				}
 		
+//print_r($przesylka_options);
 
 				foreach($produkty as $id => $value)
 				{
+					
 					$sql_results = $wpdb->get_row("SELECT nazwa FROM `s_producenci` WHERE id =".$id, ARRAY_N);
-
+					
 					$actual_producer_name = $sql_results[0];
 					$projektant_kwota = $produkty[$id][1];
 					$projektant_koszt_wysylki = $produkty[$id][2];	
 					$calkowity_koszt_wysylki += $projektant_koszt_wysylki;
+					$a=$produkty[$id][3];
+					//print_r($a);
+					$producent_przesylka='';
+					foreach($a as $pidKW)
+					{
+						foreach($pidKW as $kw)
+						{
+							$producent_przesylka.="<option value=\"".$kw['cena']."\"";
+							$producent_przesylka.=" \" >";
+							$producent_przesylka.=$kw['opis']."</option>";
+						}
+					}
+				
+					//echo "---".htmlspecialchars($producent_przesylka)."<br />";
 					
 					$wyswietl_projektanta = '<div class="koszyk_projektant">';
 					$wyswietl_projektanta.="<div class=\"koszyk_projektant_nazwa\">$actual_producer_name</div>";
 					$wyswietl_projektanta .= $produkty[$id][0];
 					$wyswietl_projektanta .= "
-					<div class=\"koszyk_projektant_sum\">
+					<div class=\"koszyk_projektant_sum\">				
+					
 						<div class=\"koszyk_projektant_sum_cena\">
             				<span class=\"bold_font blue_font big_font\">Cena produktów:</span>
-							<span class=\"bold_font big_font margin_right_5\"> $projektant_kwota zł</span>
-            			</div>
+							<span name=\"kp_proj\" class=\"bold_font big_font margin_right_5\"> $projektant_kwota zł</span>
+            			</div>						
+					<div class=\"przesylkaBox\">	
+					<div class=\"przesylkaSB\" >
+						<select  name=\"przesylka_producent_$id\">".$producent_przesylka."</select>
+					</div>
             			<div class=\"koszyk_projektant_sum_wysylka\">
                 			<span class=\"bold_font blue_font small_font\">koszt wysyłki:</span>
-                			<span class=\"bold_font small_font\"> $projektant_koszt_wysylki zł</span>
+                			<span name=\"kw_proj\" class=\"bold_font small_font\"> $projektant_koszt_wysylki zł</span>
             			</div> 						          
+						</div>
         			</div> ";
 					$wyswietl_projektanta .= "</div>";
 					echo $wyswietl_projektanta;
@@ -469,14 +554,14 @@ $order_total = $calkowity_koszt_wysylki + $product_total;
     </div>
     <div class="koszyk_zatwierdz button_zatwierdz">
         <span id="confirm_basket" class="btn_text">
-			<a href="http://naopak.com.pl/zatwierdzenie-zamowienia" >Zatwierdź (krok 1/2)</a>
+			<a href="http://naopak.com.pl/weryfikacja-zamowienia" >Zatwierdź (krok 1/2)</a>
     	</span>
     </div>
 </div>
 <?
 			}
 			else{
-				echo "<br><center><p><td>Twój koszyk jest pusty!</p></center>";
+				echo "<br><center><p>Twój koszyk jest pusty!</p></center>";
 			}
 
 ?>
