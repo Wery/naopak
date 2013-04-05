@@ -8,7 +8,6 @@ OGOLNE:
 - mapa strony (tu jestes)
 - uwzgldeniac promowane przedmioty
 - formularz kontaktowy
-- newsletter
 - na stronach gdzie wyswietlane sa jakies dane i nie poda sie ID to wyswietlac komunikat i przekierowac
 - zostaje tam gdzie sie logowales
 
@@ -49,10 +48,10 @@ LISTA (nie galeria):
 
 KOSZYK:
 - obliczanie wysylki
-- generowanie nr zamowienia
-- wysylanie maila do klienta
-- wysylanie PW do admina
-
++ generowanie nr zamowienia
++ wysylanie maila do klienta
++ wysylanie PW do admina
+- (ustalenie tresci wiadomosci)
 
 DODAJ PRODUKT:
 - co jak nie doda sie produktu, a doda sie zdjecia ?

@@ -89,8 +89,25 @@ if ( is_user_logged_in() ) {
 
 		
 
-	//	unset($_SESSION['cart']);
+	//unset($_SESSION['cart']);
 		
+	$temat = "Zamówienie";
+	$do = "admin";
+	$od = $current_user->user_login;
+	$tresc = "tresc wiadomosci";
+	$data = current_time('mysql');
+
+	$result = mysql_query("INSERT INTO s_pm (id, temat, od, do, data, tresc, od_przeczytane, do_przeczytane, od_usuniete, do_usuniete, od_admin, admin_przeczytane, admin_usuniete) VALUES (NULL, '$temat', '$od', '$do', '$data', '$tresc', 0, 0, 0, 0, 1, 0, 0);") or die(mysql_error());  
+		
+		
+ $to = "mwerynowski@gmail.com";//$current_user->user_login;
+ $subject = "Potwierdzenie złożenia zamówienia!";
+ $body = "Potwierdzenie zamówienia";
+ $headers = "From: werycreative@gmail.com";
+ $headers .= "Reply-To: jakis@mail.com";
+  mail($to, $subject, $body, $headers);
+
+ //header( 'Location: http://naopak.com.pl/' ) ;
 }
 else
 {
@@ -103,7 +120,7 @@ else
 <?php
 if ( is_user_logged_in() ) {
 
-echo "Klient o id: $customerid dokonał zamówienia o id: $nr_zamowienia </br>";
+//echo "Klient o id: $customerid dokonał zamówienia o id: $nr_zamowienia </br>";
 
 echo "Dziękujemy za złożenie zamówienia w naszym portalu. Potwierdzenie zamówienia zostało wysłane na Twoją skrzynkę pocztową. </br>Zapraszamy ponownie !</br></br>Za 5 sekund zostaniesz przeniesiony do swojego konta.";
 }
