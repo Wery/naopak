@@ -31,7 +31,7 @@
 	}
 	
 	//echo '<BR>$_COOKIE["prod_ID"]= '.$_COOKIE['prod_ID']."<BR>";
-	//echo "<BR>prod_id= ".$prod_id."<BR>";	
+	echo "<BR>prod_id= ".$prod_id."<BR>";	
 
 
 function add_scripts()
@@ -242,7 +242,34 @@ div.content .over{
 		text-shadow:none;
 		text-decoration: none;	
 }
-	
+#modal_dialog_2 .add_btn:hover
+{
+        color: #000;
+		background-color: #F99D31;
+		text-shadow:none;
+		text-decoration: none;	
+}
+#modal_dialog_2 .add_btn{
+	width:135px;
+	color:#FFF;
+	font-size:12px;
+	font-weight:normal;
+	padding: 5px;
+}
+#modal_dialog_2 .add_btn{
+	border:none;	
+	color: #FFFFFF;
+	background-color: #CCCCCC;
+	text-decoration: none;
+	text-align: center;
+	border-radius: 0px;
+	background-image:none;
+	text-shadow:none;	
+	font-size:12px;
+	border:none;	
+	font-weight:normal;
+}
+
 #add_product_form_table .uploadify-button, #add_product_form_table .add_btn{
 	border:none;	
 	color: #FFFFFF;
@@ -417,12 +444,15 @@ div.accordionContentMenu a.submenu_active{
 	font-weight:bold;
 }
 #kw_table td input{
-	width:50px;
+	width:100px;
 }
 /*th*/
 #kw_table tr:nth-child(even) {background: #CCC}
 #kw_table tr:nth-child(odd) {background: #FFF}
 
+#img_list2{
+	margin-top:10px;
+}
 </style>
 
 
@@ -558,116 +588,7 @@ function file_sort_renamer($dirname, $id)
 }
 */
 if(isset($_POST['prod_id']))
-{
-
-	$sql_tagi = $wpdb->get_results("SHOW COLUMNS FROM `s_tag`", ARRAY_N);
-	$number = $wpdb->num_rows;
-	$output="INSERT INTO s_tag(";
-
-	$x=0;
-	foreach ( $sql_tagi as $s )
-	{
-		if($x>0)
-		{		
-			if($x < $number-1)
-			{
-				$output .= $s[0].", "; 
-			}
-			else
-			{
-				$output .= $s[0];
-			}
-
-		}
-		$x++;
-	}
-	
-	$output .= ') VALUES (';
-
-	$x=0;
-	foreach ( $sql_tagi as $s )
-	{
-		if($x>0)
-		{		
-			$nazwa_tagu = substr_replace($s[0], "", 0, 3);
-			
-			if($x < $number-1)
-			{
-				$output .= $_POST['tag_'.$nazwa_tagu.''].", "; 
-			}
-			else
-			{
-				$output .= $_POST['tag_'.$nazwa_tagu.''];
-			}
-		}
-		$x++;
-	}
-	
-	$output .= ')';
-	
-	//echo "</br>".$output."</br>";
-	
-	global $current_user;
-	
-	$wpdb->query($output);
-	
-	$id_tag = $wpdb->get_row("SELECT MAX(id) FROM `s_tag`", ARRAY_N);
-	
-	$projektant_id = $wpdb->get_row("SELECT id FROM s_producenci WHERE id_uzytkownik = ".$current_user->ID, ARRAY_N);
-	
-	?>
-	</br></br><h1>
-    <? //echo "projektant o ID ".$current_user->ID.": ".$projektant_id[0]; ?>
-    </h1></br></br>
-	<?
-	    $insert_sql = "INSERT INTO s_produkt (prod_id, nazwa, cena, opis, szerokosc, wysokosc, glebokosc, waga, dostepnosc, id_projektant, id_kategoria, id_tag, data_dodania, promowany) VALUES ('"
-		.$_POST['prod_id']."','"
-		.$_POST['nazwa_produktu']."',"
-		.$_POST['cena'].",'"		
-		.nl2br($_POST['opis'])."',"
-		.$_POST['szerokosc'].","
-        .$_POST['wysokosc'].","
-        .$_POST['glebokosc'].","
-        .str_replace(',','.',$_POST['waga']).",
-        1,
-		".$projektant_id[0].","
-		.$_POST['kategoria'].","
-		.$id_tag[0].", 
-		CURDATE() 
-		,0)"; 
-	
-	//echo "<br />".$insert_sql."<br />";
-
-	$wpdb->query($insert_sql);
-	
-	$insert_kw_sql='';
-	$insert_kw_sql = "INSERT INTO s_koszty_przesylki (id_produktu, do1, od1do2, od2do5, od5do10, od10do20, od20, kurier, opis_do1, opis_od1do2, opis_od2do5, opis_od5do10, opis_od10do20, opis_od20, opis_kureir) VALUES ('"
-		.$prod_id."','"
-		.$_POST['do1']."','"
-		.$_POST['od1do2']."','"		
-		.$_POST['od2do5']."','"
-		.$_POST['od5do10']."','"
-        .$_POST['od10do20']."','"
-        .$_POST['od20']."','"
-        .$_POST['kurier']."','"
-        .$_POST['opis_do1']."','"
-		.$_POST['opis_od1do2']."','"
-		.$_POST['opis_od2do5']."','"
-		.$_POST['opis_od5do10']."','"
-		.$_POST['opis_od10do20']."','"
-		.$_POST['opis_od20']."','"
-		.$_POST['opis_kurier']."'"				
-		.")"; 
-
-	//echo "<br />".$insert_kw_sql."<br />";
-
-	$wpdb->query($insert_kw_sql);
-		
-
-echo  '<script>location.href = "http://naopak.com.pl/item?prod_id='.$_POST['prod_id'].'"</script>';
-
-
-}
+{}
 else
 {
 	//global $current_user;
@@ -728,20 +649,6 @@ else
     <tr>
     <td>
     <input name="koszt_wysylki" type="button" class="add_btn" id="koszt_wysylki" value="Koszt wysylki" />
-    <input type="hidden" id="do1" name="do1" val="0" />
-    <input type="hidden" id="opis_do1" name="opis_do1" />
-	<input type="hidden" id="od1do2" name="od1do2" val="0" />
-	<input type="hidden" id="opis_od1do2" name="opis_od1do2" />
-	<input type="hidden" id="od2do5" name="od2do5" val="0" />
-	<input type="hidden" id="opis_od2do5" name="opis_od2do5" />
-	<input type="hidden" id="od5do10" name="od5do10" val="0" />
-	<input type="hidden" id="opis_od5do10" name="opis_od5do10" />    
-    <input type="hidden" id="od10do20" name="od10do20" val="0" />
-    <input type="hidden" id="opis_od10do20" name="opis_od10do20" />
-	<input type="hidden" id="od20" name="od20" val="0" />
-	<input type="hidden" id="opis_od20" name="opis_od20" />
-   	<input type="hidden" id="kurier" name="kurier" val="0" />
-    <input type="hidden" id="opis_kurier" name="opis_kurier" />
     </td>
   </tr>
   <tr>
@@ -889,7 +796,135 @@ echo $ooo;
 		
 		$(document).ready(function(){	
 	
-		//$('#modal_dialog_2').dialog({ autoOpen: false });
+	/* ******  submit ****** */
+	 // var n = $("div").length;
+	$("#add_product_form").submit(function() {
+				var ids = [];
+				$(".obraz_produktu").each(function(){
+						ids.push($(this).attr("id"));
+					});
+					
+				var formData = $(this).serialize();
+				//console.log(formData);
+				var prod_id = $("#prod_id").val();
+				var tag_id = 0;
+				var proj_id = <? 
+				global $current_user;
+				$current_user = wp_get_current_user();
+				$query = "SELECT id FROM s_producenci WHERE id_uzytkownik = ".$current_user->ID;
+				$resultProjID = mysql_query($query) or die(mysql_error());	
+				$projID = mysql_fetch_row($resultProjID);	
+				echo $projID[0];
+				?>;
+				//console.log("ID projektanta: " + proj_id);					
+				//formData+="&tag_id="+tag_id;
+				formData+="&proj_id="+proj_id;							
+				console.log("Form submit data: "+formData);
+				if(validateNazwa() && validateCena() && validateOpis() && validateWymiar() && validateWaga())
+					console.log("formularz poprawny");			
+				else
+					console.log("formularz NIE poprawny");
+									
+				
+				var cena_wysylki = [];
+				$("input[name='cena_wysylki']").each(function(){
+						cena_wysylki.push($(this).val());
+				});
+								
+				var opis_kw = [];
+				$("input[name='opis_kw']").each(function(){
+						opis_kw.push($(this).val());
+				});			
+				
+				
+				var iloscKW = opis_kw.length;
+				var formKW="?ilosc="+iloscKW;
+				
+				var kwArray = new Array();
+
+				
+				for (var i = 0; i < iloscKW; i++) {
+				 	var opis = opis_kw[i];
+				 	var cena = cena_wysylki[i];
+					
+					//kwArray[i][0]=opis;
+					//kwArray[i][1]=cena;
+					
+					kwArray.push({"opis":opis,"cena":cena});	
+										
+					//formKW+="&cena";
+				};
+				
+				for (var i = 0; i < iloscKW; i++) {
+					var opis = kwArray[i].opis;
+				 	var cena = kwArray[i].cena;
+					
+					console.log("opis: "+opis);
+					console.log("cena: "+cena);
+				};
+				
+										
+				$.ajax({
+					url: "<?  echo get_bloginfo('template_url'); ?>/add_product_ajax.php",
+					type: "POST",	
+					data: {
+							kwArray   : kwArray,
+							form 	  : formData,
+							img_array : ids
+						  },
+					//datatype : "html",
+		            success: function(data)
+	                { 											
+						console.log("returned data: "+data);
+              		}
+				});
+				
+				
+				
+				/*			
+				$.ajax({
+					url: "<? // echo get_bloginfo('template_url'); ?>/add_product_ajax.php",
+					type: "POST",	
+					data: {
+						form: formData,
+						img_array: ids
+					},
+					datatype : "html",
+		            success: function(data)
+	                { 	
+						$("#main_contetn").prepend("<span class=\"success_msg\" >Dane zmienione pomyślnie !</span>");
+						//$('.success_msg').delay(4000).slideUp(300).remove();
+						setTimeout(function(){
+						  $(".success_msg").fadeOut("slow", function () {
+						  $(".success_msg").remove();
+							  });
+						 
+						}, 2000);
+						
+						console.log("returned data: "+data);
+              		}
+				});
+				*/
+  				return false;
+			});	
+	
+		$('#customForm').submit(function() {
+		var showMode = 0;
+		var page = 1;
+		var cenamin = $("input[name='cena_min']").val();
+		var cenamax = $("input[name='cena_max']").val();
+				
+		var url = 'http://naopak.com.pl/lista2?cat=all&subcat=all&show=0&page=1&';
+		url += 'cena_max='+cenamax+'&cena_min='+cenamin+'&kolor=-1&material=-1';
+		
+		console.log('url:  '+url);
+		
+		//$(location).attr('href',url);
+		return false;
+	});
+	
+	/* ************************************************************************************* */
+	
 		$("#modal_dialog_2").dialog({ 						
 			minWidth : 450,
 			autoOpen: false,
@@ -902,44 +937,38 @@ echo $ooo;
 				$(".ui-dialog-titlebar-close").hide(); 
 			}							
 		});
-		
+		/*
 		$('#close_kw').live( 'click',  function(){
-			$("#modal_dialog_2:ui-dialog").dialog( "close" );		
+			
+			$("#kw_table tr:gt(0)").remove();
+			$("#kw_table > tbody").append(kw_row);
+			$("#modal_dialog_2:ui-dialog").dialog( "close" );								
+			
 			console.log("close kw");
-		});
+		});*/
 		
 		$('#ok_kw').live( 'click',  function(){ 
-			console.log("open: koszt wysylki");
-			
-			$("#do1").val($("#form_do1").val());	
-			$("#opis_do1").val($("#form_opis_do1").val());	
-			
-			$("#od1do2").val($("#form_od1do2").val());
-			$("#opis_od1do2").val($("#form_od1do2").val());
-			
-			$("#od2do5").val($("#form_od2do5").val());
-			$("#opis_od2do5").val($("#form_opis_od2do5").val());
-			
-			$("#od5do10").val($("#form_od5do10").val());
-			$("#opis_od5do10").val($("#form_opis_od5do10").val());
-			
-			$("#od10do20").val($("#form_od10do20").val());
-			$("#opis_od10do20").val($("#form_opis_od10do20").val());
-			
-			$("#od20").val($("#form_od20").val());
-			$("#opis_od20").val($("#form_opis_od20").val());
-			
-			
-			$("#kurier").val($("#form_kurier").val());
-			$("#opis_kurier").val($("#form_opis_kurier").val());
-				
+			console.log("ok: koszt wysylki");									
 			$("#modal_dialog_2:ui-dialog").dialog( "close" );		
+		});
+		
+		$(".del_row").live('click',function(){
+			$(this).parent().remove();	
+		});
+		
+		var kw_row = '<tr><td><input name="cena_wysylki" type="text" class="TBwymiar" value="0" /></td><td><input name="opis_kw" type="text" class="TBwymiar" value="przesyłka Pocztą Polską" /></td><td class="del_row">usuń</td></tr>';
+	
+		$("#add_kw").live('click',function(){
+			$("#kw_table > tbody").append(kw_row);
 		});
 		
 		$('#koszt_wysylki').click(function(){
 			$("#modal_dialog_2").dialog("open");
 			console.log("open: koszt wysylki");
 		});		
+	
+	/* ************************************************************************************* */
+	
 	
 		$('#file_upload').live('mouseover',function(){
 			if(!$('#file_upload').children('div').hasClass('disabled'))
@@ -1526,6 +1555,9 @@ $("#file_upload").live('click', function () {
 				if(img_nr < 7) 	  
 		 			jQuery('#file_upload').uploadify('disable', false);
 		  
+		  
+	  			$('#file_upload').children('div').css('background-color', '#CCC');
+				$('#file_upload').children('div').css('color', '#FFF');
               },
 			  error: function(xhr, thrownError)
 			  {
@@ -1582,55 +1614,27 @@ $("#file_upload").live('click', function () {
 
 	</script>
 
-<div id="modal_dialog_2" style="padding-left:10px;" title="Koszt wysylki" >
-    <div style="width:400px;text-align:center;clear:both;" >
-    	<table id="kw_table" >
+    <div id="modal_dialog_2" style="padding-left:10px;" title="Koszt wysylki" >
+    <div style="width:100%;text-align:center;clear:both;" >
+    	<table id="kw_table" style="width:100%;" >
           <tr>
-            <th>waga:</th>
             <th>cena:</th>
-            <th>tekst:<br />(opcjonalnie)</th>
+            <th>opis:</th>
+            <th></th>
           </tr>
           <tr>
-            <td>do 1kg</td>
-            <td><input id="form_do1" type="text" class="TBwymiar" value="0" /></td>
-            <td><input id="form_opis_do1" type="text" class="TBwymiar" /></td>
-          </tr>
-          <tr>
-            <td>od 1 kg do 2kg</td>
-            <td><input id="form_od1do2" type="text" class="TBwymiar" value="0" /></td>
-            <td><input id="form_opis_od1do2" type="text" class="TBwymiar" /></td>
-          </tr>
-          <tr>
-            <td>od 2 kg do 5kg</td>
-            <td><input id="form_od2do5" type="text" class="TBwymiar" value="0" /></td>
-            <td><input id="form_opis_od2do5" type="text" class="TBwymiar" /></td>
-          </tr>
-          <tr>
-            <td>od 5 kg do 10kg</td>
-            <td><input id="form_od5do10" type="text" class="TBwymiar" value="0" /></td>
-            <td><input id="form_opis_od5do10" type="text" class="TBwymiar" /></td>
-          </tr>
-          <tr>
-            <td>od 10 kg do 20kg</td>
-            <td><input id="form_od10do20" type="text" class="TBwymiar" value="0" /></td>
-            <td><input id="form_opis_od10do20" type="text" class="TBwymiar" /></td>
-          </tr>
-            <tr>
-            <td>powyżej 20kg</td>
-            <td><input id="form_od20" type="text" class="TBwymiar" value="0" /></td>
-            <td><input id="form_opis_od20" type="text" class="TBwymiar" /></td>
-          </tr>
-          <tr>
-            <td>kurier</td>
-            <td><input id="form_kurier" type="text" class="TBwymiar" value="0" /></td>
-            <td><input id="form_opis_kurier" type="text" class="TBwymiar" /></td>
+            <td><input type="text" name="cena_wysylki" class="TBwymiar" value="0" /></td>
+            <td><input type="text" name="opis_kw" class="TBwymiar" value="przesyłka Pocztą Polską" /></td>
+            <td class="del_row">usuń</td>
           </tr>
         </table>
+        <br />
     </div>
     <div style="width:400px;text-align:right;" >
+	    <input name="add_kw" type="button" class="add_btn" id="add_kw" value="dodaj pozycję" />
         <input name="ok_kw" type="button" class="add_btn" id="ok_kw" value="ok" />
-        <input name="close_kw" type="button" class="add_btn" id="close_kw" value="anuluj" />
+       <!-- <input name="close_kw" type="button" class="add_btn" id="close_kw" value="anuluj" />-->
     </div>
-</div>
+</div>  
 
 <?php get_footer(); ?>

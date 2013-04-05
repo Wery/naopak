@@ -1,4 +1,5 @@
 <?php
+		session_start();
 			if (isset($_POST['login-submit'])) {
 				$creds = array();
 				$creds['user_login'] = $_POST["email"];
@@ -231,8 +232,8 @@ add_action('wp_print_scripts', 'add_jquery_tools');
 <?php
 function generateMenu() {
 $connection = Connect();
-$result = mysql_query("SELECT id, nazwa FROM t_category")
-or die(mysql_error());  
+$result = mysql_query("SELECT id, nazwa FROM t_category");
+//or die(mysql_error());  
 $num_rows = mysql_num_rows($result);
 $i = 1;
 while($row = mysql_fetch_array($result))
@@ -248,8 +249,8 @@ Disconnect($connection);
 }
 function generateSubmenu() {
 	$connection = Connect();
-	$result = mysql_query("SELECT subID, nazwa FROM t_subcategory")
-	or die(mysql_error());  
+	$result = mysql_query("SELECT subID, nazwa FROM t_subcategory");
+	//or die(mysql_error());  
 	$num_rows = mysql_num_rows($result);
 	echo '<table>';
 	$i = 0;
@@ -318,7 +319,7 @@ function generateSubmenu() {
 function Connect() {
 	$connection = @mysql_connect('localhost', 'root', '');
 	if (!$connection) {
-		die('Could not connect: ' . mysql_error());
+		//die('Could not connect: ' . mysql_error());
 	}
 	$db = @mysql_select_db('bollo_naopak', $connection);
 	mysql_set_charset('utf8',$connection); 
@@ -335,8 +336,8 @@ function Disconnect($connection) {
 
 function getMaterialsList($kolor) {
 	$connection = Connect();
-	$result = mysql_query("SELECT nazwa FROM s_material")
-	or die(mysql_error());  
+	$result = mysql_query("SELECT nazwa FROM s_material");
+	//or die(mysql_error());  
 	$num_rows = mysql_num_rows($result);
 	echo "<table>";
 	while($row = mysql_fetch_array($result))

@@ -44,7 +44,23 @@ function add_scripts()
 	echo '
 	<link rel="stylesheet" type="text/css" href="'.get_bloginfo('template_url').'/css/jquery.selectbox.css" media="screen" />';
 
-
+	
+	$smode='';
+	if(isset($_SESSION["show_method"]))
+	{
+		$smode = $_SESSION["show_method"];
+	}
+	else
+		$smode = "0";	
+	
+	$page='';
+	if(isset($_GET["page"]))
+	{
+		$page = $_GET["page"];
+	}
+	else
+		$page = "1";
+			
 echo"
 <script type=\"text/javascript\">
 /*	header('Cache-Control: no-cache, must-revalidate');
@@ -53,6 +69,34 @@ echo"
 	 */
 jQuery(document).ready(function(){	
 
+	$('#customForm').submit(function() {
+		var showMode = ".$smode.";
+		var page = ".$page.";
+		var cenamin = $(\"input[name='cena_min']\").val();
+		var cenamax = $(\"input[name='cena_max']\").val();
+		var kolor = $('#kolor option:selected').val();		
+		var material = $('#material option:selected').val();		
+				
+		var url = 'http://naopak.com.pl/lista2?cat=all&subcat=all&show=0&page=1&';
+		url += 'cena_max='+cenamax+'&cena_min='+cenamin+'&kolor='+kolor+'&material='+material;
+		
+		console.log('url:  '+url);
+		
+		$(location).attr('href',url);
+		return false;
+	});
+/*	
+	$('#czysc_filtr_btn').click(function() {
+		console.log('czysc_filtr_btn');
+		//$('#customForm').get(0).reset();
+		$('.cena').val('');
+		$('.sbSelector').text('wybierz');
+		$('#material').val('-1');		
+		$('#kolor').val('-1');
+		loadData(1, $(\"input[name='show']\").val());
+		return false;
+	});
+*/
 		jQuery('#material').selectbox();
 		jQuery('#kolor').selectbox();
 		
@@ -324,7 +368,18 @@ div.content .cena{
 	box-shadow:none;
 }
 
-.filtruj_btn, .powrot_btn{
+.filtruj_btn{
+	background-color:#CCC;	
+	font-size:10px;
+	padding:2px 10px 2px 10px;
+	float:right;
+	margin-left:15px;
+	height:17px;
+	color:#FFF;	
+	text-decoration: none;
+	border:none;	
+}
+.powrot_btn{
 	background-color:#CCC;	
 	font-size:10px;
 	padding:1px 10px 1px 10px;
@@ -353,25 +408,39 @@ div.content .filtruj_btn a , div.content .powrot_btn a{
 <div class="hfeed content">
 
 <?
-//$adres = get_permalink()."?" .http_build_query($_GET);
-$regex = '#(^prod_id=){1}.*?(&){1}#i';
-$query = preg_replace($regex, '', http_build_query($_GET));
-echo $query;
+function remove_querystring_var($url, $key) { 
+	//$url = preg_replace('/'.$key.'(=[^&]*)?|^'.$key.'(=[^&]*)?&?/i', '$1$2$4', $url . '&'); 
+	
+	$url = preg_replace('/(?<=&|\?)'.$key.'(=[^&]*)?(&|$)/i','',$url);
+	
+	if(count($_GET)==1)
+		$url = substr($url, 0, -1); 
+	
+	return $url; 
+}
+
+$adres = "http://naopak.com.pl/lista2?" .http_build_query($_GET);
+$query = remove_querystring_var($adres,"prod_id");
+//echo $query;
 ?>
 <div id="mapa_listowanie">
 	<div class="mapa">jesteś tutaj: <?php echo $_SERVER['REQUEST_URI']; ?></div>
 
     <div class="galeria_lista">    
 	  <span class="powrot_btn">
-				<a id="powrot" href="http://naopak.com.pl/lista2?<? echo $query; ?>" >< pworót</a>
+				<a id="powrot" href="<? echo $query; ?>" >< pworót</a>
    		 </span>
 	</div>
     	<div class="filtr_listy">
         
-   <form action="<?php the_permalink(); ?>" id="customForm" method="get" enctype="text/plain" >
+   <form id="customForm" method="post" enctype="text/plain" >
    
-    <span class="filtruj_btn">
+<!--    <span class="filtruj_btn">
 		<a id="filtruj" href="#" >filtruj</a>		
+    </span>-->
+    
+    <span class="filtruj_span">
+		<input id="filtruj_btn" class="filtruj_btn" type="submit" value="filtruj">        
     </span>
  
     <span class="filtr_ceny_do"> 

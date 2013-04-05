@@ -1,20 +1,37 @@
+
+	var form = "";
+
+	var nazwa = "";
+	var cena = "";
+	var opis = "";
+	var wysokosc = "";
+	var szerokosc = "";
+	var glebokosc = "";
+	var waga = "";
+		
+	var nazwaInfo = "";
+	var cenaInfo = "";
+	var opisInfo = "";
+	var wymiarInfo = "";
+	var wagaInfo = "";
+	
 $(document).ready(function(){
 	//global vars
-	var form = $("#add_product_form");
+	form = $("#add_product_form");
 
-	var nazwa = $("#nazwa_produktu");
-	var cena = $("#cena");
-	var opis = $("#opis");
-	var wysokosc = $("#wysokosc");
-	var szerokosc = $("#szerokosc");
-	var glebokosc = $("#glebokosc");
-	var waga = $("#waga");
+	nazwa = $("#nazwa_produktu");
+	cena = $("#cena");
+	opis = $("#opis");
+	wysokosc = $("#wysokosc");
+	szerokosc = $("#szerokosc");
+	glebokosc = $("#glebokosc");
+	waga = $("#waga");
 		
-	var nazwaInfo = $("#nazwa_produktuInfo");
-	var cenaInfo = $("#cenaInfo");
-	var opisInfo = $("#opisInfo");
-	var wymiarInfo = $("#wymiarInfo");
-	var wagaInfo = $("#wagaInfo");
+	nazwaInfo = $("#nazwa_produktuInfo");
+	cenaInfo = $("#cenaInfo");
+	opisInfo = $("#opisInfo");
+	wymiarInfo = $("#wymiarInfo");
+	wagaInfo = $("#wagaInfo");
 	
 	//On blur
 	nazwa.blur(validateNazwa);
@@ -26,14 +43,18 @@ $(document).ready(function(){
 	waga.blur(validateWaga);
 	
 	//On Submitting
+	/*
 	form.submit(function(){
 		if(validateNazwa() && validateCena() && validateOpis() && validateWymiar() && validateWaga())
 			return true
 		else
 			return false;
-	});
+	});*/
 	
 	//validation functions
+
+});
+
 	function validateNazwa(){
 		//testing regular expression
 		var a = $("#nazwa_produktu").val();
@@ -135,4 +156,3 @@ $(document).ready(function(){
 			return false;
 		}
 	}
-});

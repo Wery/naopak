@@ -50,13 +50,25 @@
 #add_product_form{
 	padding: 0 10px 10px;
 }
-#add_product_form label{
+#table_kat select{
+	width:150px !important;
+}
+#table_kat label,#table_kat input{
+	width:100px !important;
+}
+#table_tagi select{
+	width:150px !important;
+}
+#table_tagi label,#table_tagi input{
+	width:100px !important;
+}
+#add_product_form label, #table_kat label, #table_tagi label{
 	display: block;
 	color: #797979;
 	font-weight: 700;
 	line-height: 1.4em;
 }
-#add_product_form input{
+#add_product_form input, #table_kat input, #table_tagi input{
 	width: 220px;
 	padding: 6px;
 	color: #000;
@@ -64,7 +76,7 @@
 	font-size: 11px;
 	border: 1px solid #000;
 }
-#add_product_form select{
+#add_product_form select, #table_kat select, #table_tagi select{
 	width: 220px;
 	padding: 6px;
 	color: #000;

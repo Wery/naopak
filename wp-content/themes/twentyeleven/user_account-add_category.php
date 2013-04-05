@@ -289,7 +289,7 @@ get_header();
 	});
 	
 	</script>
-
+<link href="<? echo get_bloginfo('template_url'); ?>/js/add_prod/general.css" rel="stylesheet" type="text/css" />
 <style>
 
 #main_contetn{

@@ -29,9 +29,8 @@ session_start();
 	if(isset($_GET['cat'])) $cat = $_GET['cat']; else $cat = "";
 	if(isset($_GET['subcat'])) $subcat = $_GET['subcat']; else $subcat = "";
 	//$subcat = $_GET['subcat'];
-	
+	if(isset($_GET['page'])) $page = $_GET['page']; else $page = "1";
 
-		
 /*
 	$where_array = Array();
 	$array_index=0;
@@ -891,7 +890,7 @@ jQuery(document).ready(function(){
 		  });
 	  }
 	//loading_show();
-	loadData(1, $("input[name='show']").val());
+	loadData(<? echo $page; ?>, $("input[name='show']").val());
 
 	$('#lista_produktow .pagination li.active').live('click',function(){
 		var page = $(this).attr('p');

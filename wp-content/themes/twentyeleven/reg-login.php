@@ -14,7 +14,7 @@ add_action('wp_head', 'add_scripts');
 
 if ( is_user_logged_in() ) 
 { 
-	echo  '<script>location.href = "' . site_url() . '/"</script>';
+	/*echo  '<script>location.href = "' . site_url() . '/"</script>';*/
 }
 
 if (isset($_POST['submit'])) {
@@ -23,14 +23,14 @@ if (isset($_POST['submit'])) {
 	$creds['user_password'] = $_POST["pass"];
 	$creds['remember'] = true;
 	$user = wp_signon( $creds, false );
-	if ( is_wp_error($user) )
+	/*if ( is_wp_error($user) )
 	{
    		//echo $user->get_error_message();
 	}
 	else
 	{
 		echo  '<script>location.href = "' . site_url() . '/"</script>';
-	}
+	}*/
 }
 
 get_header();
@@ -42,9 +42,10 @@ get_header();
  <div id="primary">
 			<div id="content" role="main">
 
-				<?php the_post(); ?>
+				<?php // the_post(); ?>
 
-				<?php get_template_part( 'content', 'page' ); ?>               
+				<?php // get_template_part( 'content', 'page' ); ?>    
+                <p>Zaloguj się:</p>
                 <div class="login">
                 <div class="loginForm">
                     <form id="customForm" action="<?php the_permalink(); ?>" method="post">
@@ -90,6 +91,8 @@ get_header();
  				
 				if (!empty($_POST['przypomnienieForm'])) {
 				   $remindPassEmail = $_POST["remindPassEmail"];
+				   
+				   $wpdb = new wpdb('root', '', 'bollo_naopak', 'localhost');
 				   if ( username_exists(  $remindPassEmail ) )
 					{
 					    $newPass = md5_pass();

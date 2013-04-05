@@ -276,7 +276,7 @@ get_header();
 	});
 	
 	</script>
-
+<link href="<? echo get_bloginfo('template_url'); ?>/js/add_prod/general.css" rel="stylesheet" type="text/css" />
 <style>
 
 #main_contetn{
@@ -447,7 +447,7 @@ div.content .back_btn:hover {
 </style>
 
 
-<div class="hfeed content">
+	<div class="hfeed content">
 <div id="main_contetn">
 <?php
 
