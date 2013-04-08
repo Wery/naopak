@@ -11,31 +11,25 @@
 ?>
 
 <?php
+
+  session_start();
+  unset($_SESSION['naopak_cart_shipping']);
+  
 function add_scripts()
 {
-/*	echo '
-	<script language="javascript">
-	jQuery(document).ready(function(){
-	
-	jQuery(\'.menu\').mouseover(function() {
-		jQuery(this).addClass(\'over\');
-	}).mouseout(function() {
-		jQuery(this).removeClass(\'over\');										
-	});
-	
-	});
-	
-	</script>
-	';
-	*/
+		echo '<link rel="stylesheet" type="text/css" href="'.get_bloginfo('template_url').'/css/table_style.css"/>';
+
+	echo '<script type="text/javascript" src="'.get_bloginfo('template_url').'/js/jquery.tablesorter.js"></script>';
 }
 add_action('wp_head', 'add_scripts');
 
 get_header();
 
+
 ?>
 	<script language="javascript">
 	jQuery(document).ready(function(){
+	
 	
    jQuery('.submenu_group').each(function(){
 		var div = jQuery(this).find('.submenu_active').length;		
@@ -93,6 +87,31 @@ get_header();
 	jQuery('.submenu_active').parent().prev('.accordionButton').addClass('on');
 	
 	jQuery('.cat_selected').show();
+	
+	
+	jQuery('#confirm_basket').hover(function(){
+		jQuery('#confirm_basket.btn_text').css('background-color', '#F99D31');
+		jQuery('#confirm_basket.btn_text a').css('color', '#333');
+	},function(){
+		jQuery('#confirm_basket.btn_text').css('background-color', '#CCC');
+		jQuery('#confirm_basket.btn_text a').css('color', '#FFF');
+	});
+		
+	// extend the default setting to always include the zebra widget. 
+    jQuery.tablesorter.defaults.widgets = ['zebra']; 
+    // extend the default setting to always sort on the first column 
+    jQuery.tablesorter.defaults.sortList = [[0,0]]; 
+    // call the tablesorter plugin 
+    jQuery("#table_produkty").tablesorter({ 
+        // pass the headers argument and assing a object 
+        headers: { 
+            // assign the secound column (we start counting zero) 
+            1: { 
+                // disable it by setting the property sorter to false 
+                sorter: false 
+            }
+        } 
+    }); 
 	
 	});
 	
@@ -248,7 +267,42 @@ div.accordionContentMenu a.submenu_active{
 	color: #1fb5da;
 	/*background: #CCCCCC;*/
 	}
-		
+	
+#dane_klienta, #zamowione_produkty{	
+	margin-top:15px;
+}
+	
+#dane_klienta legend, #zamowione_produkty legend{	
+	/*border: 1px solid #1883FF;
+	color: #1883FF;
+	font-size: 10pt;
+	font-weight: 700;
+	padding: 0.2em 0.5em;*/
+	
+	color: #797979;
+	display: block;
+	font-weight: 700;
+	line-height: 1.4em;
+	clear:both;
+}		
+#dane_klienta div, #zamowione_produkty div{
+	border: 1px solid #CCC;
+	width:400px;
+
+}
+#zamowione_produkty{
+	margin-bottom:30px;
+}
+
+.btn_text{
+	background-color:#CCC;	
+	font-size:12px;
+	padding:5px 7px 5px 7px;
+}
+div.content .btn_text a{
+	color:#FFF;	
+	text-decoration: none;
+}	
 </style>
 
 
@@ -277,19 +331,150 @@ if ( is_user_logged_in() ) {
 <div id="mapa_listowanie">
 	<div class="mapa">jesteś tutaj: <?php echo $_SERVER['REQUEST_URI']; ?></div>
 </div>
-<? include "menu.php"; ?>
 <div id="right_content_page" >
 <?
 
+	include("koszyk_functions.php");
+	$products='';
+	if(is_array($_SESSION['cart'])){
 
+	//$wpdb = new wpdb('root', '', 'bollo_naopak', 'localhost');
+	$allKoszt=0;
+	$max=count($_SESSION['cart']);
+	for($i=0;$i<$max;$i++){
+	
+		$pid=$_SESSION['cart'][$i]['productid'];																
+		
+		$sql = "SELECT zdj1 FROM s_zdjecia WHERE id_produkt = '".$pid."'";
+		$id_sql = mysql_query($sql);
+		$img_result = mysql_fetch_row($id_sql);
+		
+		
+		$pic = "img/products/$pid/$img_result[0]_t.jpg";
+		$pname = get_product_name($pid);
+		$price = get_price($pid);
+		$allKoszt+=$price;
+		$products.='<tr>';
+		$products.='<td>'.($i+1).'</td>';
+		$products.="<td>obraz</td>";
+		$products.="<td>$pname</td>";
+		$products.="<td>$price</td>";
+		$products.='</tr>';
+	}
+	
+
+	$userId = $current_user->ID;
+	$userEmail = $current_user->user_email;
+	$userDataTable = '';
+	$result = mysql_query("SELECT * FROM s_dane_kontaktowe WHERE id_uzytkownik = '$userId'")
+	or die(mysql_error());  
+	$num_rows = mysql_num_rows($result);
+	if($num_rows != NULL)
+	{
+		while($row = mysql_fetch_array($result))
+		{
+			$userDataTable .= "<tr><td>imie i nazwisko:</td><td>".$row['imie']." ".$row['nazwisko']."</td></tr>";
+			$userDataTable .= "<tr><td>adres:</td><td>".$row['adres']."</td></tr>";		
+			$userDataTable .= "<tr><td>miasto:</td><td>".$row['miejscowosc']."</td></tr>";
+			$userDataTable .= "<tr><td>telefon:</td><td>".$row['telefon']."</td></tr>";
+			$userDataTable .= "<tr><td>kraj:</td><td>".$row['kraj']."</td></tr>";		
+			$userDataTable .= "<tr><td>firma:</td><td>".$row['firma']."</td></tr>";
+		}
+	}
+	date_default_timezone_set('Europe/Warsaw');
+	$nr_zamowienia = date('mdY', time()).'/'.$userId."/".rand(0,1000);
+	$_SESSION['naopak_cart_shipping']['nr_zam']=$nr_zamowienia;
+	
 ?>
 
-<p> dane do wysylki </p>
-<p> zawartosc zamowienia </p>
 
+
+<div id="dane_klienta"><legend>Dane do wysylki:</legend>
+<div><table>
+<? echo $userDataTable; ?>
+<tr><td>e-mail:</td><td><? echo $userEmail; ?></td></tr>
+<tr><td>nr zamówienia:</td><td><? echo $nr_zamowienia; ?></td></tr>
+</table></div>
 </div>
 
-<?php
+<div id="zamowione_produkty"><legend>Twoje zamówienie:</legend>
+<div><table id="table_produkty" class="tablesorter">
+<thead> 
+<tr>
+	<th>Lp.</th>
+	<th>gh</th>
+	<th>nazwa</th>
+	<th>cena</th>
+</tr>
+</thead>
+<? echo $products; ?>
+<!--<tr><td>1</td><td>obraz</td><td>jakies krzeslo</td><td>15zl</td></tr>
+<tr><td>2</td><td>obraz</td><td>szafa</td><td>44zl</td></tr>-->
+
+</table>
+<?
+/*
+print_r($_POST);
+echo "
+<br />
+<br />
+count post: ".count($_POST['opis'])."
+<br />
+<br />";*/
+
+$maxKW = count($_POST['opis']);
+$tmpKW = '<tr><td>koszt przesyłki:</td><td>'.$_POST['producent'][0].' - '.$_POST['opis'][0].'  '.$_POST['cena'][0].' zł</td></tr>';
+
+$_SESSION['naopak_cart_shipping'][0]['id_przesylki']=$_POST['pryeszlkaID'][0];
+$_SESSION['naopak_cart_shipping'][0]['prod_id']=$_POST['producentID'][0];
+
+$allKoszt += $_POST['cena'][0];
+for($i=1;$i<$maxKW;$i++)
+{
+	$tmpKW .= '<tr><td></td><td>'.$_POST['producent'][$i].' - '.$_POST['opis'][$i].'  '.$_POST['cena'][$i].' zł</td></tr>';
+	$_SESSION['naopak_cart_shipping'][$i]['id_przesylki']=$_POST['pryeszlkaID'][$i];
+	$_SESSION['naopak_cart_shipping'][$i]['prod_id']=$_POST['producentID'][$i];
+	$allKoszt += $_POST['cena'][$i];
+}
+
+//print_r($_SESSION['naopak_cart_shipping']);
+?>
+
+
+<table style="font-size:12px;">
+<? echo $tmpKW; ?>
+<tr>
+	<td>całkowity koszt zamówienia:</td>
+	<td><? echo $allKoszt; ?> zł</td>
+</tr>
+</table>
+
+</div>
+</div>
+        <span id="confirm_basket" class="btn_text">
+        	<? 
+				$www="";
+				if ( is_user_logged_in() ) 
+				{ 
+					$www="http://naopak.com.pl/zatwierdzenie-zamowienia/";
+				}
+				else
+				{
+					$www="http://naopak.com.pl/reg-login/";
+				}
+			
+			 ?>
+        
+			<a href="<? echo $www; ?>" >zakończ</a>
+    	</span>
+</div>
+
+<?
+  }else
+  {
+	  echo "";
+  }
+  
 } else {
     echo 'Welcome, visitor!';
 }

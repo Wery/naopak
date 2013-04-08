@@ -277,7 +277,7 @@ if ( is_user_logged_in() ) {
 	$wpdb = new wpdb('root', '', 'bollo_naopak', 'localhost');
     
 	$id_zamowienia = $_GET['id_zam'];
-	//echo "<br />id_zam = $id_zamowienia<br />";
+	echo "<br />id_zam = $id_zamowienia<br />";
 	//$content = 'Welcome, ';
     //$content .= 'User first name: ' . $current_user->user_firstname;
     //$content .= 'User last name: ' . $current_user->user_lastname;
@@ -294,7 +294,6 @@ if ( is_user_logged_in() ) {
 	INNER JOIN s_produkt ON s_produkt.prod_id = s_zamowione_produkty.id_produkt
 	LEFT JOIN s_producenci ON s_producenci.id = s_produkt.id_projektant
 	WHERE  s_zamowione_produkty.id_zamowienia =  '".$id_zamowienia."'";
-
 	$sql_results = $wpdb->get_results($query_lista_prod, ARRAY_N);
 	
 	$lista = 'Pozycje zamówienia</br><table id="myTable"  class="tablesorter" border="0" cellpadding="0" cellspacing="1">
@@ -327,11 +326,48 @@ if ( is_user_logged_in() ) {
 
 	$lista .= "</tbody></table>";
 
+	/* ******************* */
 	
+		$query_przesylka = "
+	SELECT s_koszty_przesylki.opis, s_koszty_przesylki.cena, s_producenci.nazwa
+FROM s_koszty_przesylki
+INNER JOIN s_zamowienie_przesylka ON s_zamowienie_przesylka.id_koszt_przesylki = s_koszty_przesylki.id
+INNER JOIN s_producenci ON s_zamowienie_przesylka.id_producent = s_producenci.id
+WHERE s_zamowienie_przesylka.id_zamowienia = '".$id_zamowienia."'";
+	$sql_results = $wpdb->get_results($query_przesylka, ARRAY_N);
+
+
+$przesylkaTable = 'Koszt przesyłki:</br><table id="kp"  class="tablesorter" border="0" cellpadding="0" cellspacing="1">
+<thead> 
+<tr>
+	<th>Nazwa</th>
+	<th>Cena</th>
+</tr>
+</thead>
+<tbody>';
+
+	$opis="";
+	$cena="";
+	$projektant="";
+		
+	foreach ( $sql_results as $row )
+	{ 	
+	  $opis=$row[0];
+	  $cena=$row[1];
+	  $projektant=$row[2];
+	  
+		$przesylkaTable .= "<tr>
+		<td>$projektant - $opis</td>
+		<td>$cena zł</td>
+		</tr>";	
+	}
+
+	$przesylkaTable .= "</tbody></table>";
 ?>
 <div id="center_content">
 <?php
 	echo $lista;	
+	echo $przesylkaTable;
 ?>
 </br>Historia zamówienia:</br>
 <?	

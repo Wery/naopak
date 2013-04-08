@@ -304,7 +304,7 @@ GROUP BY nr_zamowienia
 LIMIT 0 , 30";
 
 	
-echo "<br />$query_historia<br />";
+//echo "<br />$query_historia<br />";
 
 	$sql_results = $wpdb->get_results($query_historia, ARRAY_N);
 	

@@ -1,26 +1,28 @@
 OGOLNE:
-- wylogowywanie
-- newsletter
++ wylogowywanie
++ newsletter
++ czcionka wszedzie na Helvetica
++ mapa strony (tu jestes)
 - uzupelnic kategorie
 - uzupelnic kolory
 - gdzie jest formularz rejestracji producenta ?
-- czcionka wszedzie na Helvetica
-- mapa strony (tu jestes)
 - uwzgldeniac promowane przedmioty
 - formularz kontaktowy
 - na stronach gdzie wyswietlane sa jakies dane i nie poda sie ID to wyswietlac komunikat i przekierowac
 - zostaje tam gdzie sie logowales
+- dodac powiadomienie o polityce cookies
 
 DODAC:
++ dorobic role uzytkownikow
++ prywatne wiadomosci przez admina
 - obserwowane
 - ulubieni projektanci
 - google analitics
 - przycisk "kup teraz":
-	- przekierowanie do logowania
-	- wyswietlenie danych do wysyl
-- prywatne wiadomosci przez admina
+	+ przekierowanie do logowania
+	+ wyswietlenie danych do wysylki
+	- wprowadzic mozliwosc edycji danych do wysylki
 - SEO optymalizajca linkow
-- dorobic role uzytkownikow
 - strona producenta
 - formularz dodajacy baner reklamowy
 - formularz kontaktowy
@@ -29,13 +31,12 @@ DODAC:
 MAIN:
 - linki
 
-
 PRODUCT DISPLAY:
++ powrot
 - wyswietlac wymiary
 - dodaj do ulubionych
 - kontakt
 - like facebookowe
-+ powrot
 - cena wysylki
 
 LISTA (obie wersje):
@@ -47,27 +48,32 @@ LISTA (nie galeria):
 + css ceny
 
 KOSZYK:
-- obliczanie wysylki
++ obliczanie wysylki
 + generowanie nr zamowienia
 + wysylanie maila do klienta
 + wysylanie PW do admina
++ pobierac w billing.php koszt wysylki
++ w billing.php zrobic transakcyjne dodawanie do BD
 - (ustalenie tresci wiadomosci)
+- mozliwosc edycji danych do wysylki 
+- mozliwosc dodania danych do faktury
 
 DODAJ PRODUKT:
-- co jak nie doda sie produktu, a doda sie zdjecia ?
-- css naglowek
 + ostre krawedzie
-- bez pomaranczu tytlko tytul
 + mini w odstepie jak krawedz
 + dodac wage produktu
-- wypisywanie uzytego ostatnio filtru
-- dodaj zdjecie -> dodja kolejne zdj
 + pole opis, na szerokosc jak oryginalnie, zeby widac jak wyglada tekst
 + dodajac zdjecia, proporcjonalnie robic min wielkosc cropa
+- co jak nie doda sie produktu, a doda sie zdjecia ?
+- css naglowek
+- bez pomaranczu tytlko tytul
+- wypisywanie uzytego ostatnio filtru
+- dodaj zdjecie -> dodja kolejne zdj
+
 
 EDYTUJ PRODUKT:
-- css naglowek
 + dodajac zdjecia, proporcjonalnie robic min wielkosc cropa
+- css naglowek
 - jak jest max kpl. zdjec, to wylaczac przycisk dodawania
 - usowac zdjecia dodane i zaraz usuniete
 - dodane nowe zdjecie, nie moze byc od razu zapisywane w BD, a dopiero po "zapisz zmiany" (jak usowac, gdy nie zapisze zmian ?)
@@ -78,6 +84,9 @@ SZCZEGOLY PRODUCENTA:
 HISTORIA ZAMOWIEN:
 - sortowanie po kliencie i dacie
 
+HISTORIA ZAMOWIEN SZCZEGOLY:
+- wyswietlac dane do wysylki
+- wyswietlac dane do faktury
+
 SZCZEGOLY ZAMOWIENIA:
-- dane kontaktowe osoby zamawiajacej
-- rozdzielenie zamowienia na osobnych sprzedajacych
++ dane kontaktowe osoby zamawiajacej

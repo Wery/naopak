@@ -38,15 +38,30 @@ get_header();
 ?>
 		
 <link href="<?php echo get_bloginfo('template_url') ?>/reg/general.css" rel="stylesheet" type="text/css"/>
-        		
+ 
+<style>
+#content{
+}
+.login{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 250px;
+	
+	border: 2px #ccc solid;
+
+}
+</style>
+       		
  <div id="primary">
 			<div id="content" role="main">
 
 				<?php // the_post(); ?>
 
 				<?php // get_template_part( 'content', 'page' ); ?>    
-                <p>Zaloguj się:</p>
+                
                 <div class="login">
+                <p>Zaloguj się:</p>
                 <div class="loginForm">
                     <form id="customForm" action="<?php the_permalink(); ?>" method="post">
                     <div>

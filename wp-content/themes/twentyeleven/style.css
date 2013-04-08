@@ -2797,7 +2797,7 @@ div.clear {
 	color: #e46c6e;
 	font-family: Arial,  Verdana, Helvetica, sans-serif;
 	font-size: 11px;
-	float:right;
+	/*float:right;*/
 	padding-right:20px;
 }
 

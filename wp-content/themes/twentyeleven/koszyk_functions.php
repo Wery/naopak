@@ -1,6 +1,11 @@
 <?
 	$connection = mysql_connect('localhost', 'root', '') or die("Demo is not available, please try again later");
 	@mysql_select_db('bollo_naopak', $connection) or die("Demo is not available, please try again later");
+		mysql_set_charset('utf8',$connection); 
+		mysql_query('SET character_set_connection=utf8');
+		mysql_query('SET character_set_client=utf8');
+		mysql_query('SET character_set_results=utf8');
+		mysql_query('set names utf8;');
 	session_start();
     
 	$id = $_POST['id'];

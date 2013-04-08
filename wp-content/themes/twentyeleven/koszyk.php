@@ -42,6 +42,13 @@ echo '
 	$(document).ready(function(){
 	
 		$("select[name*=\'przesylka_producent_\']").selectbox();
+		/*{
+			onChange: function (val, inst) {
+					console.log("val= "+val);//+"  inst= "+inst);
+					//console.log(inst);
+					console.log("text: "+$(this).text());
+				}
+		});*/
 		
 		$("[name=remove]").click( function () {	
 			var pid = $(this).attr("alt");
@@ -49,21 +56,48 @@ echo '
 		});
 	
 		$("select[name*=\'przesylka_producent_\']").on("change",function () {
-
+			var KWarray = [];
 			$(this).parent().next().children().next().text(parseInt($(this).val())+" zł"); 
 			var cala_wysylka=0;
-			$("span[name=\'kw_proj\']").each(function(){
-				cala_wysylka+=parseInt($(this).text());
+			
+			$("span[name=\'kw_proj\']").each(function(){				
+				var tmpCena = parseInt($(this).text());					
+				cala_wysylka+=tmpCena;
 			});
+			
 			var koszt_produktow=0;
 			$("span[name=\'kp_proj\']").each(function(){
-				koszt_produktow+=parseInt($(this).text());
+				var tmpCena = parseInt($(this).text());				
+				koszt_produktow+=tmpCena;				
 			});
+			
+			$("select[name*=\'przesylka_producent_\'] :selected").each(function(){
+				//var tmpCena = parseInt($(this).text());					
+				var tmpCena = $(this).parent().val();
+				//console.log(tmpCena);
+				var tmpOpis = $(this).text();
+				//console.log(tmpOpis);	
+				KWarray.push( {\'opis\':tmpOpis, \'cena\':tmpCena } );				
+			});
+			
+			$("select[name*=\'przesylka_producent_\'] :selected").each(function(){
+				$(this).attr("elected",false);
+			});
+			//console.log("tetetetetet");
+			
+			$.each(KWarray, function(i,item){			
+				console.log("i= "+i+"  opis= "+item.opis+"  cena= "+item.cena);				
+				$("input[name=\'cena[]\']:eq("+i+")").val(item.cena);										
+				$("input[name=\'opis[]\']:eq("+i+")").val(item.opis);							
+			});
+			
 			$(".koszyk_koszt_calkowity").children().next("div:eq(3)").text(cala_wysylka+" zł");
 			var caly_koszt = cala_wysylka + koszt_produktow; 
 			$(".koszyk_koszt_calkowity").children().next("div:eq(4)").children().next().text(caly_koszt+" zł");
 			
 			//alert("cala_wysylka: "+cala_wysylka+"  koszt_produktow: "+koszt_produktow);//.css("color","red"); 
+			
+			
 		});
 	});
 	
@@ -390,9 +424,10 @@ div.content .btn_text a{
 <?
 
 
-function array_push_assoc($array, $key, $value, $key2, $value2){
+function array_push_assoc($array, $key, $value, $key2, $value2, $key3, $value3){
  $array[$key] = $value;
  $array[$key2] = $value2;
+ $array[$key3] = $value3;
  return $array;
  }
  
@@ -408,7 +443,7 @@ $max=count($_SESSION['cart']);
 	$produkty = Array();
 	$produkty_producenta='';
 	$kwota_produktow_producenta = 0;
-	$koszt_wysylki = 12;
+	$koszt_wysylki = 0;
 	$x=0;
 			if(is_array($_SESSION['cart'])){
 
@@ -437,16 +472,19 @@ $max=count($_SESSION['cart']);
 					//echo "</br>pid = $pid</br>";
 					$price = get_price($pid);
 					
-					$sql = "SELECT cena, opis FROM s_koszty_przesylki WHERE prod_id ='".$pid."'";
+					$sql = "SELECT id, cena, opis FROM s_koszty_przesylki WHERE prod_id ='".$pid."'";
 					//echo $sql."<br />";
 					$result = $wpdb->get_results($sql);
 					
 					$w=0;
 					foreach( $result as $results ) {				
 						/*$przesylka_options.= '<option value="'.$results->cena.'" >'.$results->opis."</option>";				*/		
-						$przesylka_options[$actual_producer_id][$pid][$w]=array_push_assoc($przesylka_options[$actual_producer_id][$pid][$w], 'cena', $results->cena, 'opis', $results->opis);	
+						$przesylka_options[$actual_producer_id][$pid][$w]=array_push_assoc($przesylka_options[$actual_producer_id][$pid][$w], 'id', $results->id, 'cena', $results->cena, 'opis', $results->opis);	
+					
+						//echo "<br />id= ".$results->id."<br />";
 						$w++;						
 					}
+					$koszt_wysylki = $przesylka_options[$actual_producer_id][$pid][0]['cena'];
 					
 					$x++;
 				$produkty_producenta = "   	  
@@ -478,26 +516,119 @@ $max=count($_SESSION['cart']);
 		
 //print_r($przesylka_options);
 
-				foreach($produkty as $id => $value)
+function in_multi($searchFor, $array) {
+	//foreach($array as $key) {
+	for($i=0;$i<count($array);$i++)
+	{	
+		//echo "<br />==key: ".$key['opis']."  == ".$searchFor['opis']."<br />";
+		if($array[$i]['opis'] == $searchFor['opis']) {
+			//echo "<br />==key: ".$array[$i]['cena']."  == ".$searchFor['cena']."<br />";
+			if($array[$i]['cena']<$searchFor['cena'])
+				$array[$i]['cena']=$searchFor['cena'];
+			return true;
+		}
+		else {
+			if(is_array($value)) if(in_multi($searchFor, $key)) return true;
+		}
+	}
+	return false;
+}
+function modify_multi($searchFor, $array) {
+
+	
+	for($i=0;$i<count($array);$i++)
+	{	
+		if($array[$i]['opis'] == $searchFor['opis']) {
+			if($array[$i]['cena']<$searchFor['cena'])
+				$array[$i]['cena']=$searchFor['cena'];
+			return $array;
+		}
+		else {
+			if(is_array($value)) if(in_multi($searchFor, $key)) return true;
+		}
+	}
+	return $array;
+}	
+
+function checkShipping($array){
+	
+	$projKW = array();
+	$obj = array();
+	
+	foreach ($array as $produkt) {	
+		$x=0;
+		foreach($produkt as $p )
+		{
+			if(isset($p['opis']))
+			{	
+				//print_r($projKW);
+				$obj['opis']=$p['opis'];
+				$obj['cena']=$p['cena'];
+				$obj['id']=$p['id'];
+
+				if(!in_multi($p,$projKW))
+					array_push($projKW,$obj);	
+				else
 				{
+					//echo "<br />";
+					//echo "opis: ".$p['opis']." => cena: ".$p['cena'];
+					//echo "<br />";					
+					$projKW=modify_multi($obj,$projKW);
+				}
+
+			}
+			$x++;
+		}		
+	}
+	//print_r($projKW);
+	return $projKW;
+}
+
+//unset($_SESSION['naopak_cart_shipping']);
+				$kwForm='';
+				foreach($produkty as $id => $value) // $id - id producenta
+				{
+					//echo "<br /><br />id: $id<br /><br />";
 					
 					$sql_results = $wpdb->get_row("SELECT nazwa FROM `s_producenci` WHERE id =".$id, ARRAY_N);
 					
 					$actual_producer_name = $sql_results[0];
 					$projektant_kwota = $produkty[$id][1];
-					$projektant_koszt_wysylki = $produkty[$id][2];	
-					$calkowity_koszt_wysylki += $projektant_koszt_wysylki;
+					//$projektant_koszt_wysylki = $produkty[$id][2];	
+
+
 					$a=$produkty[$id][3];
+					
 					//print_r($a);
+					
+					//$keys = array_keys($a);
+
+					$tmp=checkShipping($a);
+					$keys = array_keys($tmp);
+					//print_r($tmp);
+					//print_r($keys);
+					$kwForm.='<input type="hidden" name="cena[]" value="'.$tmp[0]['cena'].'"/>';
+        		    $kwForm.='<input type="hidden" name="opis[]" value="'.$tmp[0]['opis'].'"/>';
+					$kwForm.='<input type="hidden" name="pryeszlkaID[]" value="'.$tmp[0]['id'].'"/>';
+					$kwForm.='<input type="hidden" name="producentID[]" value="'.$id.'"/>';					
+					$kwForm.='<input type="hidden" name="producent[]" value="'.$actual_producer_name.'"/>';									
+					
+					$projektant_koszt_wysylki = $tmp[0]['cena'];
+					$calkowity_koszt_wysylki += $projektant_koszt_wysylki;
+					
+					/*echo "<br /><br />opis: ".$a[$keys[0]][0]['opis'].
+						 "<br />koszt: ".$a[$keys[0]][0]['cena']."<br />";*/
+										
+					//print_r($a);
+					
 					$producent_przesylka='';
-					foreach($a as $pidKW)
+					foreach($tmp as $pidKW)
 					{
-						foreach($pidKW as $kw)
-						{
-							$producent_przesylka.="<option value=\"".$kw['cena']."\"";
-							$producent_przesylka.=" \" >";
-							$producent_przesylka.=$kw['opis']."</option>";
-						}
+						//foreach($pidKW as $kw)
+						//{
+							$producent_przesylka.="<option value=\"".$pidKW['cena']."\">";
+							$producent_przesylka.=$pidKW['opis']."</option>";
+						//}
 					}
 				
 					//echo "---".htmlspecialchars($producent_przesylka)."<br />";
@@ -525,9 +656,7 @@ $max=count($_SESSION['cart']);
 					$wyswietl_projektanta .= "</div>";
 					echo $wyswietl_projektanta;
 				}
-				
-				 
-				 
+								
 			?>
                 <!--<input type="button" value="Clear Cart" onclick="clear_cart()">-->
                 <!--<input type="button" value="Place Order" onclick="window.location='http://localhost/wordpress/?page_id=323'"> -->
@@ -553,8 +682,26 @@ $order_total = $calkowity_koszt_wysylki + $product_total;
         </div>
     </div>
     <div class="koszyk_zatwierdz button_zatwierdz">
-        <span id="confirm_basket" class="btn_text">
-			<a href="http://naopak.com.pl/weryfikacja-zamowienia" >Zatwierdź (krok 1/2)</a>
+	 
+      <? 
+      $www="";
+      if ( is_user_logged_in() ) 
+      { 
+          $www="http://naopak.com.pl/weryfikacja-zamowienia";
+      }
+      else
+      {
+          $www="http://naopak.com.pl/reg-login/";
+		  /*<? echo $www; ?>*/
+      }
+      ?>
+             
+     <form action="<? echo $www; ?>" id="kwForm" method="post" >
+        <? echo $kwForm; ?>             
+		<input id="btnKW" class="btnKW" type="submit" value="idz dalej">        
+    </form>
+        <span id="confirm_basket" class="btn_text">      
+			<a href="<? echo $www; ?>" >Zatwierdź (krok 1/2)</a>
     	</span>
     </div>
 </div>
